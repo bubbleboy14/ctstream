@@ -18,7 +18,7 @@ stream.core = {
 		copyLink: function(channel) {
 			return CT.dom.link(channel + " (link)", function() {
 				var cbnode = stream.core._.nodes.link;
-				cbnode.lastChild.value = "https://" + stream.core._.host + "#" + channel;
+				cbnode.lastChild.value = "https://" + stream.core._.host + "/stream#" + channel;
 				if (cbnode._on) { // hide fallback node
 					CT.dom.showHideT(cbnode);
 					cbnode._on = false;
