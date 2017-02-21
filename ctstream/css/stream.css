@@ -1,0 +1,79 @@
+body {
+	overflow: hidden;
+}
+
+img {
+	cursor: pointer;
+}
+
+#ctmain {
+	overflow: hidden;
+}
+
+.widget {
+	margin: 0px;
+}
+
+.widget video,
+#ctmain video {
+	border-radius: 15px;
+	border: 2px solid white;
+	margin: 10px;
+	padding: 10px;
+}
+
+#ctfooter {
+	z-index: 2000;
+}
+
+#ctfooter img {
+	max-height: 90px;
+	filter: invert(100%);
+}
+
+.widget img,
+#ctmain img {
+	filter: invert(50%);
+}
+
+.buttonActive,
+.widget img:hover,
+#ctmain img:hover {
+	filter: invert(100%) !important;
+}
+
+#ctfooter img:hover {
+	filter: invert(0%);
+	background: white;
+	border-radius: 15px;
+	max-height: 80px;
+	padding: 5px;
+}
+
+video {
+	width: 320px;
+	height: 240px;
+}
+
+.plink {
+	color: #551A8B !important;
+}
+
+#vnode>div {
+	display: inline-block;
+	width: 365px;
+	padding: 5px;
+	margin: 5px;
+	border: 2px solid white;
+	border-top-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+}
+
+.basicpopup {
+	position: absolute;
+}
+
+.basicpopup a {
+	font-weight: bold;
+	text-decoration: none;
+}
