@@ -251,7 +251,7 @@ stream.core = {
 		});
 	},
 	init: function() {
-		if (core.util.ctstream.mode == "storage") // more secure
+		if (core.config.ctstream.mode == "storage") // more secure
 			stream.core.checkStorage();
 		else // hash mode (default): easier, more linkable
 			stream.core.checkHash();
