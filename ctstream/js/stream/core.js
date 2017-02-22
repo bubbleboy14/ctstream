@@ -217,10 +217,13 @@ stream.core = {
 					path: "/_pw",
 					params: { pw: val },
 					cb: cb,
-					eb: function() { location = core.config.ctstream.redirect; }
+					eb: stream.core.redir
 				})
 			}
 		})).show();
+	},
+	redir: function() {
+		location = core.config.ctstream.redirect;
 	},
 	checkHash: function() {
 		if (location.hash) {
@@ -243,7 +246,9 @@ stream.core = {
 		}
 	},
 	checkStorage: function() {
-		CT.storage.get(core.config.ctstream.storage_key, stream.core.startMultiplex);
+		CT.storage.get(core.config.ctstream.storage_key, function(data) {
+			data ? stream.core.startMultiplex(data) : stream.core.redir();
+		});
 	},
 	init: function() {
 		if (core.util.ctstream.mode == "storage") // more secure
