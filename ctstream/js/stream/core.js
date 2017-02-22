@@ -141,8 +141,13 @@ stream.core = {
 		}
 		if (lurk)
 			stream.core.multiplex(channel, cnode);
-		else
+		else if (core.config.ctstream.open_stream)
 			stream.core.startRecord(stream.core.multiplex(channel, cnode));
+		else {
+			stream.core.credz(function() {
+				stream.core.startRecord(stream.core.multiplex(channel, cnode));
+			});
+		}
 	},
 	tvButton: function(cb, title, fname) {
 		var b = CT.dom.img("/img/" + (fname || "tv") + ".png", "abs b0 m5", function() {
