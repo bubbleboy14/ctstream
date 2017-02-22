@@ -117,20 +117,25 @@ stream.core = {
 	resizeWidget: function() {
 		CT.dom.className("widget")[0].style.zoom = CT.align.height() / 440;
 	},
-	startMultiplex: function(channel) {
+	startMultiplex: function(channel, chat, lurk, zoom) {
 		var cnode;
-		if (channel.slice(-5) == "_chat") {
-			channel = channel.slice(0, -5);
+		if (arguments.length == 1 && typeof arguments[0] != "string") {
+			var obj = arguments[0];
+			channel = obj.channel;
+			chat = obj.chat;
+			lurk = obj.lurk;
+			zoom = obj.zoom;
+		}
+		if (chat) {
 			cnode = CT.dom.div(null, "abs t0 r0 b0 w200p");
 			stream.core._.nodes.parent.appendChild(cnode);
 		}
-		if (channel.slice(-5) == "_zoom") {
-			channel = channel.slice(0, -5);
+		if (zoom) {
 			CT.onresize(stream.core.resizeWidget);
 			stream.core.resizeWidget();
 		}
-		if (channel.slice(-5) == "_lurk")
-			stream.core.multiplex(channel.slice(0, -5), cnode);
+		if (lurk)
+			stream.core.multiplex(channel, cnode);
 		else
 			stream.core.startRecord(stream.core.multiplex(channel, cnode));
 	},
@@ -218,11 +223,27 @@ stream.core = {
 		})).show();
 	},
 	checkHash: function() {
-		if (location.hash)
-			stream.core.startMultiplex(location.hash.slice(1));
+		if (location.hash) {
+			var opts = {},
+				channel = location.hash.slice(1);
+			if (channel.slice(-5) == "_chat") {
+				channel = channel.slice(0, -5);
+				opts.chat = true;
+			}
+			if (channel.slice(-5) == "_zoom") {
+				channel = channel.slice(0, -5);
+				opts.zoom = true;
+			}
+			if (channel.slice(-5) == "_lurk") {
+				channel = channel.slice(0, -5);
+				opts.lurk = true;
+			}
+			opts.channel = channel;
+			stream.core.startMultiplex(opts);
+		}
 	},
 	checkStorage: function() {
-
+		CT.storage.get(core.config.ctstream.storage_key, stream.core.startMultiplex);
 	},
 	init: function() {
 		if (core.util.ctstream.mode == "storage") // more secure
