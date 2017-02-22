@@ -246,9 +246,8 @@ stream.core = {
 		}
 	},
 	checkStorage: function() {
-		CT.storage.get(core.config.ctstream.storage_key, function(data) {
-			data ? stream.core.startMultiplex(data) : stream.core.redir();
-		});
+		var data = CT.storage.get(core.config.ctstream.storage_key);
+		data ? stream.core.startMultiplex(data) : stream.core.redir();
 	},
 	init: function() {
 		if (core.config.ctstream.mode == "storage") // more secure
