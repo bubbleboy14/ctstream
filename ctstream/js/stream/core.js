@@ -168,8 +168,66 @@ stream.core = {
 				"Remote Control", "remote_control")
 		});
 	},
+	loadScheduler: function(show) {
+		if (show) {
+			CT.dom.setContent("ctmain", CT.dom.div([
+				CT.dom.div("Next show in", "bigger padded"),
+				CT.parse.countdown(show.ttl),
+				CT.dom.br(),
+				CT.dom.button("stream it!", function() {
+					CT.storage.set(core.config.ctstream.storage_key, {
+						"chat": true,
+						"channel": show.token
+					});
+					location = "/";
+				}),
+				CT.dom.pad(),
+				CT.dom.button("cancel!", function() {
+					CT.memcache.forget("show");
+					showit();
+				})
+			], "padded centered"));
+		} else { // scheduling interface
+			var ds = CT.dom.dateSelectors({ withtime: true });
+			CT.dom.setContent("ctmain", CT.dom.div([
+				CT.dom.div("Schedule a show!", "bigger padded"),
+				ds,
+				CT.dom.br(),
+				CT.dom.button("do it", function() {
+					var val = ds.value();
+					if (!val) return;
+					var secs = ~~((CT.parse.string2date(val) - Date.now()) / 1000);
+					CT.memcache.countdown.set("show", secs, function() {
+						CT.memcache.countdown.get("show", stream.core.loadScheduler);
+					});
+				})
+			], "padded centered"));
+		}
+	},
+	credz: function(cb) {
+		(new CT.modal.Prompt({
+			noClose: true,
+			cb: function(val) {
+				CT.net.post({
+					path: "/_pw",
+					params: { pw: val },
+					cb: cb,
+					eb: function() { location = core.config.ctstream.redirect; }
+				})
+			}
+		})).show();
+	},
 	checkHash: function() {
 		if (location.hash)
 			stream.core.startMultiplex(location.hash.slice(1));
+	},
+	checkStorage: function() {
+
+	},
+	init: function() {
+		if (core.util.ctstream.mode == "storage") // more secure
+			stream.core.checkStorage();
+		else // hash mode (default): easier, more linkable
+			stream.core.checkHash();
 	}
 };
