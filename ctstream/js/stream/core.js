@@ -184,7 +184,7 @@ stream.core = {
 						"chat": true,
 						"channel": show.token
 					});
-					location = "/";
+					location = "/stream";
 				}),
 				CT.dom.pad(),
 				CT.dom.button("cancel!", function() {
