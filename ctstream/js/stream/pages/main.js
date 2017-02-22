@@ -13,5 +13,5 @@ CT.onload(function() {
 		stream.core.loadRemote();
 	}
 	CT.initCore();
-	stream.core.checkHash();
+	stream.core.init();
 });

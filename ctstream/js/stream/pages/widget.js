@@ -7,5 +7,5 @@ CT.pubsub.set_reconnect(false);
 
 CT.onload(function() {
 	stream.core.setNode();
-	stream.core.checkHash();
+	stream.core.init();
 });
