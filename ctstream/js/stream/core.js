@@ -70,11 +70,11 @@ stream.core = {
 		CT.dom.setContent(stream.core._.nodes.test, streamer.getNode());
 		return direct ? streamer.echo : streamer.chunk;
 	},
-	multiplex: function(channel, chat) {
+	multiplex: function(channel, chat, vopts) {
 		var multiplexer = stream.core._.multiplexer = stream.core._.multiplexer ||
 			new CT.stream.Multiplexer({ host: stream.core._.host, chat: chat,
 				port: core.config.ctstream.port, node: stream.core._.nodes.video,
-				wserror: stream.core._.wserror, singlechannel: true });
+				wserror: stream.core._.wserror, singlechannel: true, vidopts: vopts });
 		multiplexer.join(channel);
 		CT.dom.setContent(stream.core._.nodes.title, stream.core._.copyLink(channel));
 		return function(blobs, segment) {
