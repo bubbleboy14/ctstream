@@ -8,7 +8,7 @@ stream.core = {
 		nodes: {
 			parent: null,
 			test: CT.dom.div(null, null, "testnode"),
-			video: CT.dom.div(null, "abs w1 h1", "vnode"),
+			video: CT.dom.div(null, "abs all0", "vnode"),
 			title: CT.dom.div(null, "biggest bold centered"),
 			link: CT.dom.div([
 				CT.dom.node("Ctr-C to Copy URL"),
@@ -70,11 +70,12 @@ stream.core = {
 		CT.dom.setContent(stream.core._.nodes.test, streamer.getNode());
 		return direct ? streamer.echo : streamer.chunk;
 	},
-	multiplex: function(channel, chat, vopts) {
-		var multiplexer = stream.core._.multiplexer = stream.core._.multiplexer ||
+	multiplex: function(channel, chat) {
+		var c = core.config.ctstream, multiplexer = stream.core._.multiplexer = stream.core._.multiplexer ||
 			new CT.stream.Multiplexer({ host: stream.core._.host, chat: chat,
-				port: core.config.ctstream.port, node: stream.core._.nodes.video,
-				wserror: stream.core._.wserror, singlechannel: true, vidopts: vopts });
+				title: stream.core._.nodes.title, vidopts: c.video_opts,
+				port: c.port, node: stream.core._.nodes.video, chatblurs: c.chatblurs,
+				wserror: stream.core._.wserror, singlechannel: true });
 		multiplexer.join(channel);
 		CT.dom.setContent(stream.core._.nodes.title, stream.core._.copyLink(channel));
 		return function(blobs, segment) {
@@ -128,7 +129,11 @@ stream.core = {
 		}
 		if (chat) {
 			cnode = CT.dom.div(null, "abs t0 r0 b0 w200p");
+			stream.core._.nodes.video.classList.add("r200");
+			stream.core._.nodes.video.classList.add("fullvid");
 			stream.core._.nodes.parent.appendChild(cnode);
+			if (core.config.ctstream.no_title)
+				stream.core._.nodes.title.classList.add("hidden");
 		}
 		if (zoom) {
 			CT.onresize(stream.core.resizeWidget);
