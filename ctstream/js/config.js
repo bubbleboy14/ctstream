@@ -7,5 +7,10 @@
 	"no_title": false,
 	"open_stream": true,
 	"video_opts": {},
-	"chatblurs": ["say what?", "any questions?", "what's up?"]
+	"chatblurs": ["say what?", "any questions?", "what's up?"],
+	"copy": {
+		"ready": "you're late!",
+		"countdown": "show starts in",
+		"nothing": "nothing to see here!"
+	}
 }
