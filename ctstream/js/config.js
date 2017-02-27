@@ -1,6 +1,7 @@
 {
 	"mode": "hash",
 	"redirect": "/",
+	"countdown_parent_host": null,
 	"storage_key": "ssk",
 	"port": 8888,
 	"channels": [],
