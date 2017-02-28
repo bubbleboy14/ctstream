@@ -71,11 +71,16 @@ stream.core = {
 		return direct ? streamer.echo : streamer.chunk;
 	},
 	multiplex: function(channel, chat) {
-		var c = core.config.ctstream, multiplexer = stream.core._.multiplexer = stream.core._.multiplexer ||
-			new CT.stream.Multiplexer({ host: stream.core._.host, chat: chat,
-				title: stream.core._.nodes.title, vidopts: c.video_opts,
-				port: c.port, node: stream.core._.nodes.video, chatblurs: c.chatblurs,
-				wserror: stream.core._.wserror, singlechannel: true });
+		var c = core.config.ctstream, _ = stream.core._,
+			multiplexer = _.multiplexer = _.multiplexer
+				|| new CT.stream.Multiplexer(CT.merge({
+					chat: chat,
+					port: c.port,
+					host: _.host,
+					wserror: _.wserror,
+					node: _.nodes.video,
+					title: _.nodes.title
+				}, c.multiplexer_opts));
 		multiplexer.join(channel);
 		CT.dom.setContent(stream.core._.nodes.title, stream.core._.copyLink(channel));
 		return function(blobs, segment) {

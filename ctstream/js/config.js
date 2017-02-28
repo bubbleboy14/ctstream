@@ -7,8 +7,12 @@
 	"channels": [],
 	"no_title": false,
 	"open_stream": true,
-	"video_opts": {},
-	"chatblurs": ["say what?", "any questions?", "what's up?"],
+	"multiplexer_opts": {
+		"chatblurs": ["say what?", "any questions?", "what's up?"],
+		"vidopts": {},
+		"closeunsubs": true,
+		"singlechannel": true
+	},
 	"copy": {
 		"ready": "you're late!",
 		"countdown": "show starts in",
