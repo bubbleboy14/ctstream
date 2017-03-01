@@ -256,7 +256,8 @@ stream.core = {
 		})).show();
 	},
 	redir: function() {
-		location = core.config.ctstream.redirect;
+		if (core.config.ctstream.redirect)
+			location = core.config.ctstream.redirect;
 	},
 	checkHash: function() {
 		if (location.hash) {
@@ -276,7 +277,8 @@ stream.core = {
 			}
 			opts.channel = channel;
 			stream.core.startMultiplex(opts);
-		}
+		} else
+			stream.core.redir();
 	},
 	checkStorage: function() {
 		var data = CT.storage.get(core.config.ctstream.storage_key);
