@@ -21,7 +21,9 @@ stream.countdown = {
 		CT.dom.setContent(node || document.body,
 			stream.countdown.node(show));
 	},
-	widget: function() {
-		CT.memcache.countdown.get("show", stream.countdown.load);
+	widget: function(node) {
+		CT.memcache.countdown.get("show", function(show) {
+			stream.countdown.load(show, node);
+		});
 	}
 };
