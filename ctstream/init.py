@@ -6,7 +6,7 @@ copies = {
 	"img": ["audio.png", "remote_control.png", "save.png", "tv.png"],
 	"css": ["custom.css"]
 }
-copies[hsdir] = ["index.html", "schedule.html", "widget.html"]
+copies[hsdir] = ["countdown.html", "index.html", "schedule.html", "widget.html"]
 
 syms = {
 	".": ["_pw.py"],
