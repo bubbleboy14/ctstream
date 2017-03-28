@@ -205,8 +205,14 @@ stream.core = {
 				}),
 				CT.dom.pad(),
 				CT.dom.button("cancel!", function() {
-					CT.memcache.forget("show");
-					stream.core.loadScheduler();
+					CT.net.post({
+						path: "/_pw",
+						params: {
+							pw: stream.core._pw,
+							action: "clear"
+						},
+						cb: stream.core.loadScheduler
+					});
 				})
 			], "padded centered"));
 		} else { // scheduling interface
@@ -230,6 +236,7 @@ stream.core = {
 		(new CT.modal.Prompt({
 			noClose: true,
 			cb: function(val) {
+				stream.core._pw = val;
 				CT.net.post({
 					path: "/_pw",
 					params: { pw: val },
