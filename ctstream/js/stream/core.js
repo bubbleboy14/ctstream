@@ -66,6 +66,8 @@ stream.core = {
 		stream.core._.nodes.parent.appendChild(stream.core._.nodes.link);
 		stream.core._.nodes.parent.appendChild(stream.core._.nodes.title);
 		stream.core._.nodes.parent.appendChild(stream.core._.nodes.video);
+		if (core.config.ctstream.background)
+			stream.core._.nodes.parent.style.background = "url(" + core.config.ctstream.background + ")";
 	},
 	echo: function(direct) {
 		var streamer = new CT.stream.Streamer();
@@ -135,7 +137,7 @@ stream.core = {
 			zoom = obj.zoom;
 		}
 		if (chat) {
-			cnode = CT.dom.div(null, "abs t0 r0 b0 w200p");
+			cnode = CT.dom.div(null, "abs t0 r0 b0 w195p");
 			stream.core._.nodes.video.classList.add("r200");
 			stream.core._.nodes.video.classList.add("fullvid");
 			stream.core._.nodes.parent.appendChild(cnode);

@@ -7,6 +7,7 @@
 	"channels": [],
 	"no_title": false,
 	"open_stream": true,
+	"background": null,
 	"multiplexer_opts": {
 		"chatblurs": ["say what?", "any questions?", "what's up?"],
 		"vidopts": {},
