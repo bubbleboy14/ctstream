@@ -142,7 +142,7 @@ stream.core = {
 	resizeWidget: function() {
 		CT.dom.className("widget")[0].style.zoom = CT.align.height() / 440;
 	},
-	startMultiplex: function(channel, chat, lurk, zoom) {
+	startMultiplex: function(channel, chat, lurk, zoom, user) {
 		var cnode;
 		if (arguments.length == 1 && typeof arguments[0] != "string") {
 			var obj = arguments[0];
@@ -150,6 +150,7 @@ stream.core = {
 			chat = obj.chat;
 			lurk = obj.lurk;
 			zoom = obj.zoom;
+			user = obj.user;
 		}
 		if (chat) {
 			cnode = CT.dom.div(null, "abs t0 r0 b0 w195p");
@@ -163,6 +164,8 @@ stream.core = {
 			CT.onresize(stream.core.resizeWidget);
 			stream.core.resizeWidget();
 		}
+		if (user)
+			core.config.ctstream.multiplexer_opts.user = user;
 		if (lurk)
 			stream.core.multiplex(channel, cnode);
 		else if (core.config.ctstream.open_stream)
@@ -216,7 +219,8 @@ stream.core = {
 				CT.dom.button("stream it!", function() {
 					CT.storage.set(core.config.ctstream.storage_key, {
 						"chat": true,
-						"channel": show.token
+						"channel": show.token,
+						"user": core.config.ctstream.default_hostname
 					});
 					location = "/stream";
 				}),

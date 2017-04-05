@@ -10,6 +10,7 @@
 	"background": null,
 	"back_message": null,
 	"end_message": null,
+	"default_hostname": null,
 	"multiplexer_opts": {
 		"chatblurs": ["say what?", "any questions?", "what's up?"],
 		"vidopts": {},

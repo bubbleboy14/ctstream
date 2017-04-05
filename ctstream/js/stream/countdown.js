@@ -8,11 +8,14 @@ stream.countdown = {
 				CT.dom.span(core.config.ctstream.copy.ready),
 				CT.dom.pad(),
 				CT.dom.button("check it out!", function() {
-					CT.storage.set(core.config.ctstream.storage_key, {
+					var opts = {
 						"chat": true,
 						"lurk": true,
 						"channel": show.token
-					});
+					};
+					if (core.config.ctstream.multiplexer_opts.chatnames && location.hash)
+						opts.user = location.hash.slice(1);
+					CT.storage.set(core.config.ctstream.storage_key, opts);
 					top.location = "/stream";
 				})
 			]) : core.config.ctstream.copy.nothing;
