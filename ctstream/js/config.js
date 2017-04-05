@@ -8,6 +8,8 @@
 	"no_title": false,
 	"open_stream": true,
 	"background": null,
+	"back_message": null,
+	"end_message": null,
 	"multiplexer_opts": {
 		"chatblurs": ["say what?", "any questions?", "what's up?"],
 		"vidopts": {},

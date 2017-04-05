@@ -11,6 +11,7 @@ stream.core = {
 			parent: null,
 			test: CT.dom.div(null, null, "testnode"),
 			video: CT.dom.div(null, "abs all0", "vnode"),
+			back: CT.dom.marquee(core.config.ctstream.back_message, "gigantic bold pt1-2", null, true),
 			title: CT.dom.div(null, "biggest bold centered"),
 			link: CT.dom.div([
 				CT.dom.node("Ctr-C to Copy URL"),
@@ -66,6 +67,8 @@ stream.core = {
 		stream.core._.nodes.parent.appendChild(stream.core._.nodes.link);
 		stream.core._.nodes.parent.appendChild(stream.core._.nodes.title);
 		stream.core._.nodes.parent.appendChild(stream.core._.nodes.video);
+		if (core.config.ctstream.back_message)
+			stream.core._.nodes.video.appendChild(stream.core._.nodes.back);
 		if (core.config.ctstream.background)
 			stream.core._.nodes.parent.style.background = "url(" + core.config.ctstream.background + ")";
 	},
@@ -75,16 +78,28 @@ stream.core = {
 		return direct ? streamer.echo : streamer.chunk;
 	},
 	multiplex: function(channel, chat) {
-		var c = core.config.ctstream, _ = stream.core._,
-			multiplexer = _.multiplexer = _.multiplexer
-				|| new CT.stream.Multiplexer(CT.merge({
-					chat: chat,
-					port: c.port,
-					host: _.host,
-					wserror: _.wserror,
-					node: _.nodes.video,
-					title: _.nodes.title
-				}, c.multiplexer_opts));
+		var c = core.config.ctstream, _ = stream.core._, opts = CT.merge({
+			chat: chat,
+			port: c.port,
+			host: _.host,
+			wserror: _.wserror,
+			node: _.nodes.video,
+			title: _.nodes.title
+		}, c.multiplexer_opts);
+		if (c.back_message) {
+			opts.onstart = function() {
+				CT.dom.hide(_.nodes.back);
+			};
+		}
+		if (c.end_message) {
+			opts.onstop = function() {
+				CT.dom.setContent(_.nodes.back, c.end_message);
+				CT.dom.show(_.nodes.back);
+				_.nodes.back.start();
+			};
+		}
+		var multiplexer = _.multiplexer = _.multiplexer
+			|| new CT.stream.Multiplexer(opts);
 		multiplexer.join(channel);
 		CT.dom.setContent(stream.core._.nodes.title, stream.core._.copyLink(channel));
 		return function(blobs, segment) {
