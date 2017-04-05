@@ -11,6 +11,7 @@
 	"back_message": null,
 	"end_message": null,
 	"default_hostname": null,
+	"require_username": false,
 	"multiplexer_opts": {
 		"chatblurs": ["say what?", "any questions?", "what's up?"],
 		"vidopts": {},
@@ -20,6 +21,7 @@
 	"copy": {
 		"ready": "you're late!",
 		"countdown": "show starts in",
-		"nothing": "nothing to see here!"
+		"nothing": "nothing to see here!",
+		"nouser": "stream is streaming. log in to view."
 	}
 }
