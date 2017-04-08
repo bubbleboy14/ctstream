@@ -1,6 +1,7 @@
 {
 	"mode": "hash",
 	"redirect": "/",
+	"countdown_class": null,
 	"countdown_parent_host": null,
 	"storage_key": "ssk",
 	"port": 8888,
