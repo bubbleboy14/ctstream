@@ -6,6 +6,8 @@ CT.pubsub.set_protocol("wss");
 CT.pubsub.set_reconnect(false);
 
 CT.onload(function() {
+	for (var o in core.config.ctstream.stream_opts)
+		CT.stream.opts[o] = core.config.ctstream.stream_opts[o];
 	stream.core.setNode(CT.dom.id("ctmain"));
 	if (core.config.footer) {
 		core.config.ctstream.channels.length &&

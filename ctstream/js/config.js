@@ -13,6 +13,7 @@
 	"end_message": null,
 	"default_hostname": null,
 	"require_username": false,
+	"stream_opts": {},
 	"multiplexer_opts": {
 		"chatblurs": ["say what?", "any questions?", "what's up?"],
 		"vidopts": {},
