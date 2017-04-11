@@ -16,4 +16,5 @@ CT.onload(function() {
 	}
 	CT.initCore();
 	stream.core.init();
+	CT.on("beforeunload", CT.storage.clear);
 });

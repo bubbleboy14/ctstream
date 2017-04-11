@@ -1,4 +1,5 @@
 CT.require("stream.countdown");
+CT.require("stream.schedule");
 
 stream.core = {
 	_: {
@@ -210,49 +211,6 @@ stream.core = {
 				"Remote Control", "remote_control")
 		});
 	},
-	loadScheduler: function(show) {
-		if (show) {
-			CT.dom.setContent("ctmain", CT.dom.div([
-				CT.dom.div("Next show in", "bigger padded"),
-				CT.parse.countdown(show.ttl),
-				CT.dom.br(),
-				CT.dom.button("stream it!", function() {
-					CT.storage.set(core.config.ctstream.storage_key, {
-						"chat": true,
-						"channel": show.token,
-						"user": core.config.ctstream.default_hostname
-					});
-					location = "/stream";
-				}),
-				CT.dom.pad(),
-				CT.dom.button("cancel!", function() {
-					CT.net.post({
-						path: "/_pw",
-						params: {
-							pw: stream.core._pw,
-							action: "clear"
-						},
-						cb: stream.core.loadScheduler
-					});
-				})
-			], "padded centered"));
-		} else { // scheduling interface
-			var ds = CT.dom.dateSelectors({ withtime: true });
-			CT.dom.setContent("ctmain", CT.dom.div([
-				CT.dom.div("Schedule a show!", "bigger padded"),
-				ds,
-				CT.dom.br(),
-				CT.dom.button("do it", function() {
-					var val = ds.value();
-					if (!val) return;
-					var secs = ~~((CT.parse.string2date(val) - Date.now()) / 1000);
-					CT.memcache.countdown.set(core.config.ctstream.default_channel, secs, function() {
-						CT.memcache.countdown.get(core.config.ctstream.default_channel, stream.core.loadScheduler);
-					});
-				})
-			], "padded centered"));
-		}
-	},
 	credz: function(cb) {
 		(new CT.modal.Prompt({
 			noClose: true,
@@ -270,6 +228,33 @@ stream.core = {
 	redir: function() {
 		if (core.config.ctstream.redirect)
 			location = core.config.ctstream.redirect;
+	},
+	checkPassword: function() {
+		if (!core.config.ctstream.allow_password)
+			return stream.core.redir();
+		(new CT.modal.Prompt({
+			noClose: true,
+			prompt: "password?",
+			style: "password",
+			cb: function(chan) {
+				CT.memcache.countdown.get(chan, function(show) {
+					if (!show)
+						return stream.core.redir();
+					(new CT.modal.Prompt({
+						noClose: true,
+						prompt: "nickname?",
+						cb: function(uname) {
+							stream.core.startMultiplex({
+								chat: true,
+								lurk: true,
+								user: uname,
+								channel: chan
+							});
+						}
+					})).show();
+				});
+			}
+		})).show();
 	},
 	checkHash: function() {
 		if (location.hash) {
@@ -290,11 +275,11 @@ stream.core = {
 			opts.channel = channel;
 			stream.core.startMultiplex(opts);
 		} else
-			stream.core.redir();
+			stream.core.checkPassword();
 	},
 	checkStorage: function() {
 		var data = CT.storage.get(core.config.ctstream.storage_key);
-		data ? stream.core.startMultiplex(data) : stream.core.redir();
+		data ? stream.core.startMultiplex(data) : stream.core.checkPassword();
 	},
 	init: function() {
 		if (core.config.ctstream.mode == "storage") // more secure

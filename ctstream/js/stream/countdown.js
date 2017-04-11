@@ -1,9 +1,9 @@
 stream.countdown = {
 	_show_or_no: function(show) {
 		var opts = {
-			"chat": true,
-			"lurk": true,
-			"channel": show.token
+			chat: true,
+			lurk: true,
+			channel: show.token
 		};
 		if (core.config.ctstream.multiplexer_opts.chatnames && location.hash)
 			opts.user = location.hash.slice(1);
