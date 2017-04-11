@@ -101,6 +101,14 @@ stream.schedule = {
 			CT.dom.div(null, null, core.config.ctstream.default_channel),
 			CT.dom.div(null, null, "private")
 		]);
-		CT.memcache.countdown.get(core.config.ctstream.default_channel, stream.schedule.load);
+		CT.memcache.countdown.list(function(chans) {
+			chans.forEach(function(chan) {
+				CT.memcache.countdown.get(chan, function(show) {
+					stream.schedule.load(show, chan);
+				});
+			});
+			if (chans.indexOf(core.config.ctstream.default_channel) == -1)
+				CT.memcache.countdown.get(core.config.ctstream.default_channel, stream.schedule.load);
+		});
 	}
 };
