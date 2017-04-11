@@ -30,8 +30,9 @@ stream.countdown = {
 			CT.dom.div(stream.countdown.node(show), core.config.ctstream.countdown_class));
 	},
 	widget: function(node) {
-		CT.memcache.countdown.get("show", function(show) {
-			stream.countdown.load(show, node);
-		});
+		CT.memcache.countdown.get(core.config.ctstream.default_channel,
+			function(show) {
+				stream.countdown.load(show, node);
+			});
 	}
 };

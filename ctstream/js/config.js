@@ -11,6 +11,7 @@
 	"background": null,
 	"back_message": null,
 	"end_message": null,
+	"default_channel": "show",
 	"default_hostname": null,
 	"require_username": false,
 	"stream_opts": {},

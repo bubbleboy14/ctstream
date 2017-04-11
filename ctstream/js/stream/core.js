@@ -246,8 +246,8 @@ stream.core = {
 					var val = ds.value();
 					if (!val) return;
 					var secs = ~~((CT.parse.string2date(val) - Date.now()) / 1000);
-					CT.memcache.countdown.set("show", secs, function() {
-						CT.memcache.countdown.get("show", stream.core.loadScheduler);
+					CT.memcache.countdown.set(core.config.ctstream.default_channel, secs, function() {
+						CT.memcache.countdown.get(core.config.ctstream.default_channel, stream.core.loadScheduler);
 					});
 				})
 			], "padded centered"));
