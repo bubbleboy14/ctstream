@@ -4,7 +4,7 @@ private_show = {
 private_show["body"] = """
 You've been invited to a private show.
 
-It starts at %s. To watch, click here:
+It starts on %s. To watch, click here:
 
 %s/stream/private.html#%s
 
@@ -17,7 +17,7 @@ Enjoy!
 private_show["html"] = """
 You've been invited to a private show.<br>
 <br>
-It starts at %s. To watch, click <a href="%s/stream/private.html#%s">here</a>.<br>
+It starts on %s. To watch, click <a href="%s/stream/private.html#%s">here</a>.<br>
 <br>
 And enter this password:<br>
 <br>
