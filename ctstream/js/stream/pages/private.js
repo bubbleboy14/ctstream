@@ -1,3 +1,4 @@
+CT.require("CT.dom");
 CT.require("CT.storage");
 CT.require("core");
 
