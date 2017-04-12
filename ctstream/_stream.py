@@ -20,7 +20,6 @@ def response():
 				"user": email.split("@")[0]
 			})))
 			send_mail(email, subject=private_show["subject"],
-				body=private_show["body"]%(ts, baseaddr, credz, pw),
-				html=private_show["html"]%(ts, baseaddr, credz, pw))
+				body=private_show["body"]%(ts, baseaddr, credz, pw))
 
 respond(response)
