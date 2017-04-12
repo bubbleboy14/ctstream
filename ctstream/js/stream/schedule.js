@@ -11,7 +11,7 @@ stream.schedule = {
 			CT.dom.addContent("private", node);
 		}
 		if (show) {
-			CT.dom.setContent(node, CT.dom.div([
+			var content = [
 				tnode,
 				CT.dom.div("Next show in", "bigger padded"),
 				CT.parse.countdown(show.ttl),
@@ -37,7 +37,34 @@ stream.schedule = {
 						}
 					});
 				})
-			], "padded centered"));
+			];
+			if (priv) {
+				content.push(CT.dom.pad());
+				content.push(CT.dom.button("email invitations", function() {
+					(new CT.modal.Prompt({
+						style: "multiple-string",
+						prompt: "whom do you want to email?",
+						cb: function(addrs) {
+							CT.net.post({
+								path: "/_stream",
+								params: {
+									show: name,
+									emails: addrs,
+									action: "invite",
+									pw: stream.core._pw
+								},
+								eb: function(e) {
+									alert("there was a problem: " + e);
+								},
+								cb: function() {
+									alert("success!");
+								}
+							});
+						}
+					})).show();
+				}));
+			}
+			CT.dom.setContent(node, CT.dom.div(content, "padded centered"));
 		} else if (priv && !isnew)
 			CT.dom.remove(name);
 		else { // scheduling interface
