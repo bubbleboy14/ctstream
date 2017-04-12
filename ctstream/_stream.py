@@ -1,4 +1,4 @@
-import base64, json, urllib
+import base64, json, time, urllib
 from cantools.web import respond, fail, cgi_get, getmem, clearmem, send_mail
 from cantools import config
 from streamails import private_show
@@ -12,7 +12,7 @@ def response():
 	elif action == "invite":
 		pw = cgi_get("show")
 		show = getmem(pw, False)
-		ts = show["ttl"].strftime("%A at %-I:%M%p")
+		ts = "%s %s"%(show["ttl"].strftime("%A at %-I:%M%p"), time.tzname[time.daylight])
 		baseaddr = "%s://%s"%(config.web.protocol, config.web.domain)
 		for email in cgi_get("emails"):
 			credz = urllib.quote(base64.b64encode(json.dumps({
