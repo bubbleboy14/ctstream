@@ -14,7 +14,7 @@
 	"default_channel": "show",
 	"default_hostname": null,
 	"require_username": false,
-	"allow_password": true,
+	"allow_password": false,
 	"stream_opts": {},
 	"multiplexer_opts": {
 		"chatblurs": ["say what?", "any questions?", "what's up?"],
