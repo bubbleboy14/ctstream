@@ -217,7 +217,7 @@ stream.core = {
 			cb: function(val) {
 				stream.core._pw = val;
 				CT.net.post({
-					path: "/_pw",
+					path: "/_stream",
 					params: { pw: val },
 					cb: cb,
 					eb: stream.core.redir

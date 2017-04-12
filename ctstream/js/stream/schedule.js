@@ -27,7 +27,7 @@ stream.schedule = {
 				CT.dom.pad(),
 				CT.dom.button("cancel!", function() {
 					CT.net.post({
-						path: "/_pw",
+						path: "/_stream",
 						params: {
 							pw: stream.core._pw,
 							action: "clear"
