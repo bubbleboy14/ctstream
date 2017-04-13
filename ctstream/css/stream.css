@@ -32,12 +32,14 @@ img {
 }
 
 .widget img,
+#testnode img,
 #ctmain img {
 	filter: invert(50%);
 }
 
 .buttonActive,
 .widget img:hover,
+#testnode img:hover,
 #ctmain img:hover {
 	filter: invert(100%) !important;
 }
