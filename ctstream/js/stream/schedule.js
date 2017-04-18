@@ -42,24 +42,35 @@ stream.schedule = {
 				content.push(CT.dom.pad());
 				content.push(CT.dom.button("email invitations", function() {
 					(new CT.modal.Prompt({
-						style: "multiple-string",
-						prompt: "whom do you want to email?",
-						cb: function(addrs) {
-							CT.net.post({
-								path: "/_stream",
-								params: {
-									show: name,
-									emails: addrs,
-									action: "invite",
-									pw: stream.core._pw
-								},
-								eb: function(e) {
-									alert("there was a problem: " + e);
-								},
-								cb: function() {
-									alert("success!");
+						prompt: [
+							"Please enter the text of your email below. Include the following tokens:",
+							"{link} -&gt; link to the stream goes here",
+							"{time} -&gt; date/time of stream goes here",
+							"{password} -&gt; password goes here"
+						],
+						cb: function(msg) {
+							(new CT.modal.Prompt({
+								style: "multiple-string",
+								prompt: "whom do you want to email?",
+								cb: function(addrs) {
+									CT.net.post({
+										path: "/_stream",
+										params: {
+											msg: msg,
+											show: name,
+											emails: addrs,
+											action: "invite",
+											pw: stream.core._pw
+										},
+										eb: function(e) {
+											alert("there was a problem: " + e);
+										},
+										cb: function() {
+											alert("success!");
+										}
+									});
 								}
-							});
+							})).show();
 						}
 					})).show();
 				}));
