@@ -23,7 +23,7 @@ def response():
 				"user": email.split("@")[0]
 			})))
 			link = "%s%s"%(baseaddr, credz)
-			body = msg and msg.format(link=link, password=pw,
+			body = msg and msg.format(link='<a href="%s">here</a>'%(link,), password=pw,
 				time=ts) or private_show["body"]%(ts, link, pw)
 			send_mail(email, subject=private_show["subject"], body=body)
 
