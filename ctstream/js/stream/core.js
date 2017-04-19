@@ -126,7 +126,9 @@ stream.core = {
 		};
 	},
 	stopRecord: function() {
-		stream.core._.stream.stop();
+		stream.core._.stream.getTracks().forEach(function(track) {
+			track.stop();
+		});
 		stream.core._.recorder.stop();
 		stream.core._.recorder._stopped = true;
 		var testnode = stream.core._.nodes.test.firstChild;
