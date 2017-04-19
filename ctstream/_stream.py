@@ -1,5 +1,6 @@
-import base64, json, os, time, urllib
-from cantools.web import respond, succeed, fail, cgi_get, getmem, clearmem, send_mail
+import base64, json, time, urllib
+from cantools.web import respond, fail, read_file, send_file, send_mail, cgi_get, getmem, clearmem
+from cantools.util import transcode
 from cantools import config
 from streamails import private_show
 
@@ -9,8 +10,8 @@ def response():
 	action = cgi_get("action", required=False)
 	if action == "clear":
 		clearmem()
-	elif action == "reccheck":
-		succeed(os.path.isdir(os.path.join("blob", "mc", cgi_get("token"))))
+	elif action == "transcode":
+		send_file(transcode(read_file(cgi_get("data")), True))
 	elif action == "invite":
 		pw = cgi_get("show")
 		msg = cgi_get("msg", required=False)
