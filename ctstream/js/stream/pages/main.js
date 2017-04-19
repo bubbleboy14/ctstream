@@ -4,6 +4,7 @@ CT.require("core");
 CT.require("stream.core");
 CT.pubsub.set_protocol("wss");
 CT.pubsub.set_reconnect(false);
+CT.stream.opts.setTranscoder(stream.core.transcode);
 
 CT.onload(function() {
 	for (var o in core.config.ctstream.stream_opts)

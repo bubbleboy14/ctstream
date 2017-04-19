@@ -73,6 +73,22 @@ stream.core = {
 		if (core.config.ctstream.background)
 			stream.core._.nodes.parent.style.background = "url(" + core.config.ctstream.background + ")";
 	},
+	transcode: function(cb) {
+		if (core.config.ctstream.stop_on_save) {
+			stream.core._.multiplexer.stop();
+			stream.core.stopRecord();
+		}
+		var encoder = function(blob) {
+			CT.net.formUp(blob, {
+				path: "/_stream",
+				params: {
+					action: "transcode",
+					pw: stream.core._pw
+				}
+			});
+		};
+		return encoder;
+	},
 	echo: function(direct) {
 		var streamer = new CT.stream.Streamer();
 		CT.dom.setContent(stream.core._.nodes.test, streamer.getNode());
@@ -110,17 +126,21 @@ stream.core = {
 		};
 	},
 	stopRecord: function() {
+		stream.core._.stream.stop();
 		stream.core._.recorder.stop();
-		var v = stream.core._.nodes.test.firstChild.video
-			|| stream.core._.nodes.test.firstChild; // handles stream test
-		v.pause();
-		if (CT.info.isChrome)
-			v.src = "";
-		else if (CT.info.isFirefox)
-			v.mozSrcObject = null;
-		else
-			v.src = null;
-		CT.dom.remove(v);
+		stream.core._.recorder._stopped = true;
+		var testnode = stream.core._.nodes.test.firstChild;
+		if (testnode) { // handles stream test
+			var v = testnode.video || testnode;
+			v.pause();
+			if (CT.info.isChrome)
+				v.src = "";
+			else if (CT.info.isFirefox)
+				v.mozSrcObject = null;
+			else
+				v.src = null;
+			CT.dom.remove(v);
+		}
 	},
 	startRecord: function(cb) {
 		CT.stream.util.record(cb, function(rec, vstream) {
