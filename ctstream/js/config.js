@@ -15,6 +15,7 @@
 	"default_hostname": null,
 	"require_username": false,
 	"allow_password": false,
+	"stop_on_save": true,
 	"stream_opts": {},
 	"multiplexer_opts": {
 		"chatblurs": ["say what?", "any questions?", "what's up?"],
