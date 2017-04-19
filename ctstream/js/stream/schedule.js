@@ -43,6 +43,7 @@ stream.schedule = {
 				content.push(CT.dom.button("email invitations", function() {
 					(new CT.modal.Prompt({
 						isTA: true,
+						inputClass: "w1 block",
 						prompt: [
 							"Please enter the text of your email below. Include the following tokens:",
 							"{link} -&gt; link to the stream goes here",
