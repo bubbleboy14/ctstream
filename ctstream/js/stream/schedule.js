@@ -40,6 +40,19 @@ stream.schedule = {
 			];
 			if (priv) {
 				content.push(CT.dom.pad());
+				content.push(CT.dom.button("show link", function() {
+					var token = escape(btoa(JSON.stringify({
+						channel: show.token,
+						user_prompt: true
+					}))), link = "https://" + location.host + "/stream/private.html#" + token;
+					(new CT.modal.Modal({
+						content: [
+							CT.dom.div("Here's a link to the private show:", "bigger bold"),
+							CT.dom.link(link, null, link)
+						]
+					})).show();
+				}));
+				content.push(CT.dom.pad());
 				content.push(CT.dom.button("email invitations", function() {
 					(new CT.modal.Prompt({
 						isTA: true,
