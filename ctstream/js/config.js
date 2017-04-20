@@ -17,6 +17,7 @@
 	"allow_password": false,
 	"stop_on_save": true,
 	"transcode": false,
+	"host_presence": false,
 	"stream_opts": {},
 	"multiplexer_opts": {
 		"chatblurs": ["say what?", "any questions?", "what's up?"],

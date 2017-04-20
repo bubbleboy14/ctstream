@@ -38,6 +38,13 @@ stream.core = {
 				}
 			});
 		},
+		presenceTracker: function() {
+			var n = CT.dom.div("(just you)");
+			CT.pubsub.set_cb("presence", function(p) {
+				CT.dom.setContent(n, "count: " + p);
+			});
+			return n;
+		},
 		wserror: function() {
 			(new CT.modal.Modal({
 				transition: "slide",
@@ -118,11 +125,15 @@ stream.core = {
 		var multiplexer = _.multiplexer = _.multiplexer
 			|| new CT.stream.Multiplexer(opts);
 		multiplexer.join(channel);
-		CT.dom.setContent(stream.core._.nodes.title, stream.core._.copyLink(channel));
+		if (c.host_presence && multiplexer.opts.user == c.default_hostname) {
+			CT.dom.setContent(_.nodes.title, _.presenceTracker());
+			_.nodes.title.classList.remove("hidden"); // may be hidden by "no_title"
+		} else
+			CT.dom.setContent(_.nodes.title, _.copyLink(channel));
 		return function(blobs, segment) {
-			var vid = multiplexer.push(blobs, segment, channel, stream.core._.stream);
-			if (!stream.core._.recorder.video)
-				stream.core._.recorder.video = vid;
+			var vid = multiplexer.push(blobs, segment, channel, _.stream);
+			if (!_.recorder.video)
+				_.recorder.video = vid;
 		};
 	},
 	stopRecord: function() {
