@@ -18,11 +18,17 @@ stream.countdown = {
 			})
 		];
 	},
+	_timestamp: function(ttl) {
+		var d = new Date(Math.round((Date.now() + ttl * 1000) / 1800000) * 1800000);
+		return d.toString().split(d.getFullYear())[0] + "@ " + d.toLocaleTimeString().replace(":00 ", " ");
+	},
 	node: function(show) {
 		return show ? (show.ttl > 0 ? [
 				CT.dom.span(core.config.ctstream.copy.countdown),
 				CT.dom.pad(),
-				CT.parse.countdown(show.ttl)
+				CT.parse.countdown(show.ttl),
+				CT.dom.pad(),
+				CT.dom.span("(your time: " + stream.countdown._timestamp(show.ttl) + ")")
 			] : stream.countdown._show_or_no(show)) : core.config.ctstream.copy.nothing;
 	},
 	load: function(show, node) {
