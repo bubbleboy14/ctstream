@@ -31,14 +31,17 @@ stream.countdown = {
 				CT.dom.span("(your time: " + stream.countdown._timestamp(show.ttl) + ")")
 			] : stream.countdown._show_or_no(show)) : core.config.ctstream.copy.nothing;
 	},
-	load: function(show, node) {
+	load: function(show, node, extra) {
+		var content = stream.countdown.node(show);
+		if (extra)
+			content = [content, extra];
 		CT.dom.setContent(node || document.body,
-			CT.dom.div(stream.countdown.node(show), core.config.ctstream.countdown_class));
+			CT.dom.div(content, core.config.ctstream.countdown_class));
 	},
-	widget: function(node) {
+	widget: function(node, extra) {
 		CT.memcache.countdown.get(core.config.ctstream.default_channel,
 			function(show) {
-				stream.countdown.load(show, node);
+				stream.countdown.load(show, node, extra);
 			});
 	}
 };

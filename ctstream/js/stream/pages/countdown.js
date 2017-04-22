@@ -8,4 +8,6 @@ if (cph && cfg.redirect &&
 	document.referrer.indexOf(cph) == -1)
 		window.open(cfg.redirect, "_top");
 
-CT.onload(stream.countdown.widget);
+CT.onload(function() {
+	stream.countdown.widget(null, cfg.countdown_extra && cfg.countdown_extra());
+});
