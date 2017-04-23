@@ -33,7 +33,7 @@ stream.countdown = {
 	},
 	load: function(show, node, extra) {
 		var content = stream.countdown.node(show);
-		if (extra)
+		if (extra && content != core.config.ctstream.copy.nouser)
 			content = [content, extra];
 		CT.dom.setContent(node || document.body,
 			CT.dom.div(content, core.config.ctstream.countdown_class));
