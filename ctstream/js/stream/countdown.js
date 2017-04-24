@@ -32,8 +32,13 @@ stream.countdown = {
 			] : stream.countdown._show_or_no(show)) : core.config.ctstream.copy.nothing;
 	},
 	load: function(show, node, extra) {
-		var content = stream.countdown.node(show);
-		if (extra && content != core.config.ctstream.copy.nouser.replace("[HOST]", show.meta.host))
+		var content = stream.countdown.node(show), _valid = function() {
+			if (show)
+				return content != core.config.ctstream.copy.nouser.replace("[HOST]", show.meta.host);
+			else
+				return !core.config.ctstream.multiplexer_opts.chatnames || !!location.hash.slice(1);
+		}
+		if (extra && _valid())
 			content = [content, extra];
 		CT.dom.setContent(node || document.body,
 			CT.dom.div(content, core.config.ctstream.countdown_class));
