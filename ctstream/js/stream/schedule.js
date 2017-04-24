@@ -15,12 +15,12 @@ stream.schedule = {
 				tnode,
 				CT.dom.div("Next show in", "bigger padded"),
 				CT.parse.countdown(show.ttl),
-				CT.dom.br(),
+				CT.dom.div("Host: " + show.meta.host, "big padded"),
 				CT.dom.button("stream it!", function() {
 					CT.storage.set(cfg.storage_key, {
 						"chat": true,
 						"channel": show.token,
-						"user": cfg.default_hostname
+						"user": show.meta.host
 					});
 					location = "/stream";
 				}),
@@ -94,11 +94,14 @@ stream.schedule = {
 		} else if (priv && !isnew)
 			CT.dom.remove(name);
 		else { // scheduling interface
-			var ds = CT.dom.dateSelectors({ withtime: true });
+			var ds = CT.dom.dateSelectors({ withtime: true }),
+				hn = CT.dom.smartField({ blurs: ["Host Name"] });
 			CT.dom.setContent(node, CT.dom.div([
 				tnode,
 				CT.dom.div("Schedule a show!", "bigger padded"),
 				ds,
+				CT.dom.br(),
+				hn,
 				CT.dom.br(),
 				CT.dom.button("do it", function() {
 					var val = ds.value();
@@ -108,7 +111,7 @@ stream.schedule = {
 						CT.memcache.countdown.get(name, function(show) {
 							stream.schedule.load(show, name);
 						});
-					});
+					}, { host: CT.dom.getFieldValue(hn) || cfg.default_hostname });
 				})
 			], "padded centered"));
 		}
