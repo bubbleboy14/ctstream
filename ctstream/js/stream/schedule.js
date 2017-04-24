@@ -13,7 +13,7 @@ stream.schedule = {
 		if (show) {
 			var content = [
 				tnode,
-				CT.dom.div("Next show in", "bigger padded"),
+				CT.dom.div("Next show: " + stream.core.timestamp(show.ttl), "bigger padded"),
 				CT.parse.countdown(show.ttl),
 				CT.dom.div("Host: " + show.meta.host, "big padded"),
 				CT.dom.button("stream it!", function() {

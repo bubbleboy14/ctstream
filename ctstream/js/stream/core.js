@@ -258,6 +258,10 @@ stream.core = {
 			}
 		})).show();
 	},
+	timestamp: function(ttl) {
+		var d = new Date(Math.round((Date.now() + ttl * 1000) / 1800000) * 1800000);
+		return d.toString().split(d.getFullYear())[0] + "@ " + d.toLocaleTimeString().replace(":00 ", " ");
+	},
 	redir: function() {
 		if (core.config.ctstream.redirect)
 			location = core.config.ctstream.redirect;
