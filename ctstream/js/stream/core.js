@@ -101,7 +101,7 @@ stream.core = {
 		CT.dom.setContent(stream.core._.nodes.test, streamer.getNode());
 		return direct ? streamer.echo : streamer.chunk;
 	},
-	multiplex: function(channel, chat) {
+	multiplex: function(channel, chat, lurk) {
 		var c = core.config.ctstream, _ = stream.core._, opts = CT.merge({
 			chat: chat,
 			port: c.port,
@@ -125,7 +125,7 @@ stream.core = {
 		var multiplexer = _.multiplexer = _.multiplexer
 			|| new CT.stream.Multiplexer(opts);
 		multiplexer.join(channel);
-		if (c.host_presence && multiplexer.opts.user == c.default_hostname) {
+		if (c.host_presence && !lurk) {
 			CT.dom.setContent(_.nodes.title, _.presenceTracker());
 			_.nodes.title.classList.remove("hidden"); // may be hidden by "no_title"
 		} else
@@ -201,7 +201,7 @@ stream.core = {
 		if (user)
 			core.config.ctstream.multiplexer_opts.user = user;
 		if (lurk)
-			stream.core.multiplex(channel, cnode);
+			stream.core.multiplex(channel, cnode, true);
 		else if (core.config.ctstream.open_stream)
 			stream.core.startRecord(stream.core.multiplex(channel, cnode));
 		else {
