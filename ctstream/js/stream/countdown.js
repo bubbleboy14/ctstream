@@ -8,9 +8,9 @@ stream.countdown = {
 		if (core.config.ctstream.multiplexer_opts.chatnames && location.hash)
 			opts.user = location.hash.slice(1);
 		if (core.config.ctstream.require_username && !opts.user)
-			return core.config.ctstream.copy.nouser;
+			return core.config.ctstream.copy.nouser.replace("[HOST]", show.meta.host);
 		return [
-			CT.dom.span(core.config.ctstream.copy.ready),
+			CT.dom.span(core.config.ctstream.copy.ready.replace("[HOST]", show.meta.host)),
 			CT.dom.pad(),
 			CT.dom.button("check it out!", function() {
 				CT.storage.set(core.config.ctstream.storage_key, opts);
@@ -24,7 +24,7 @@ stream.countdown = {
 	},
 	node: function(show) {
 		return show ? (show.ttl > 0 ? [
-				CT.dom.span(core.config.ctstream.copy.countdown),
+				CT.dom.span(core.config.ctstream.copy.countdown.replace("[HOST]", show.meta.host)),
 				CT.dom.pad(),
 				CT.parse.countdown(show.ttl),
 				CT.dom.pad(),
@@ -33,7 +33,7 @@ stream.countdown = {
 	},
 	load: function(show, node, extra) {
 		var content = stream.countdown.node(show);
-		if (extra && content != core.config.ctstream.copy.nouser)
+		if (extra && content != core.config.ctstream.copy.nouser.replace("[HOST]", show.meta.host))
 			content = [content, extra];
 		CT.dom.setContent(node || document.body,
 			CT.dom.div(content, core.config.ctstream.countdown_class));
