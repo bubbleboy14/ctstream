@@ -245,6 +245,11 @@ stream.core = {
 		});
 	},
 	credz: function(cb) {
+		if (core.config.ctstream.require_admin) {
+			CT.require("user.core", true);
+			if (!user.core._current || !user.core._current.admin)
+				stream.core.redir();
+		}
 		(new CT.modal.Prompt({
 			noClose: true,
 			cb: function(val) {
