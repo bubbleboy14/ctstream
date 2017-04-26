@@ -176,7 +176,18 @@ stream.core = {
 	resizeWidget: function() {
 		CT.dom.className("widget")[0].style.zoom = CT.align.height() / 440;
 	},
-	startMultiplex: function(channel, chat, lurk, zoom, user) {
+	_start: function(channel, cnode, lurk) {
+		if (lurk)
+			stream.core.multiplex(channel, cnode, true);
+		else if (core.config.ctstream.open_stream)
+			stream.core.startRecord(stream.core.multiplex(channel, cnode));
+		else {
+			stream.core.credz(function() {
+				stream.core.startRecord(stream.core.multiplex(channel, cnode));
+			});
+		}
+	},
+	startMultiplex: function(channel, chat, lurk, zoom, user, inferred) {
 		var cnode;
 		if (arguments.length == 1 && typeof arguments[0] != "string") {
 			var obj = arguments[0];
@@ -185,6 +196,7 @@ stream.core = {
 			lurk = obj.lurk;
 			zoom = obj.zoom;
 			user = obj.user;
+			inferred = obj.inferred;
 		}
 		if (chat) {
 			cnode = CT.dom.div(null, "abs t0 r0 b0 w195p");
@@ -198,17 +210,24 @@ stream.core = {
 			CT.onresize(stream.core.resizeWidget);
 			stream.core.resizeWidget();
 		}
-		if (user)
+		if (user) {
 			core.config.ctstream.multiplexer_opts.user = user;
-		if (lurk)
-			stream.core.multiplex(channel, cnode, true);
-		else if (core.config.ctstream.open_stream)
-			stream.core.startRecord(stream.core.multiplex(channel, cnode));
-		else {
-			stream.core.credz(function() {
-				stream.core.startRecord(stream.core.multiplex(channel, cnode));
-			});
+			if (inferred && core.config.ctstream.confirm_inferred) {
+				var p = new CT.modal.Prompt({
+					noClose: true,
+					inputClass: "w280",
+					blurs: ["what's your nickname? [default: " + user + "]"],
+					cb: function() {
+						var name = CT.dom.getFieldValue(p.input);
+						if (name)
+							core.config.ctstream.multiplexer_opts.user = name;
+						stream.core._start(channel, cnode, lurk);
+					}
+				});
+				return p.show();
+			}
 		}
+		stream.core._start(channel, cnode, lurk);
 	},
 	tvButton: function(cb, title, fname) {
 		var b = CT.dom.img("/img/" + (fname || "tv") + ".png", "abs b0 m5", function() {

@@ -5,8 +5,10 @@ stream.countdown = {
 			lurk: true,
 			channel: show.token
 		};
-		if (core.config.ctstream.multiplexer_opts.chatnames && location.hash)
+		if (core.config.ctstream.multiplexer_opts.chatnames && location.hash) {
 			opts.user = location.hash.slice(1);
+			opts.inferred = true;
+		}
 		if (core.config.ctstream.require_username && !opts.user)
 			return core.config.ctstream.copy.nouser.replace("[HOST]", show.meta.host);
 		return [
