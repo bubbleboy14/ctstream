@@ -25,7 +25,7 @@ stream.countdown = {
 			CT.dom.span(core.config.ctstream.copy.countdown.replace("[HOST]", show.meta.host)),
 			CT.dom.pad()
 		];
-		if (CT.info.iPhone)
+		if (CT.info.mobile)
 			d.push(CT.dom.span("at " + stream.core.timestamp(show.ttl)));
 		else {
 			d.push(CT.dom.span("starts in"));
