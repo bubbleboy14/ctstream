@@ -48,7 +48,7 @@ stream.countdown = {
 				return !core.config.ctstream.multiplexer_opts.chatnames || !!location.hash.slice(1);
 		}
 		if (extra && _valid())
-			content = [CT.dom.span(content), extra];
+			content = [extra, CT.dom[CT.info.mobile ? "span" : "div"](content)];
 		CT.dom.setContent(node || document.body,
 			CT.dom.div(content, core.config.ctstream.countdown_class));
 	},
