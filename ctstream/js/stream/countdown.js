@@ -42,9 +42,9 @@ stream.countdown = {
 	},
 	load: function(show, node, extra) {
 		var content = stream.countdown.node(show), _valid = function() {
-			if (show)
-				return content != core.config.ctstream.copy.nouser.replace("[HOST]", show.meta.host);
-			else
+//			if (show)
+//				return content != core.config.ctstream.copy.nouser.replace("[HOST]", show.meta.host);
+//			else
 				return !core.config.ctstream.multiplexer_opts.chatnames || !!location.hash.slice(1);
 		}
 		if (extra && _valid())
