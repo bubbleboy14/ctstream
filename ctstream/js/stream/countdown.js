@@ -25,11 +25,15 @@ stream.countdown = {
 			CT.dom.span(core.config.ctstream.copy.countdown.replace("[HOST]", show.meta.host)),
 			CT.dom.pad()
 		];
-		if (!CT.info.iPhone) {
+		if (CT.info.iPhone)
+			d.push(CT.dom.span("at " + stream.core.timestamp(show.ttl)));
+		else {
+			d.push(CT.dom.span("starts in"));
+			d.push(CT.dom.pad());
 			d.push(CT.parse.countdown(show.ttl));
 			d.push(CT.dom.pad());
+			d.push(CT.dom.span("(your time: " + stream.core.timestamp(show.ttl) + ")"));
 		}
-		CT.dom.span("(your time: " + stream.core.timestamp(show.ttl) + ")");
 		return d;
 	},
 	node: function(show) {

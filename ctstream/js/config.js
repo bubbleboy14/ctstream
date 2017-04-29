@@ -27,7 +27,7 @@
 	},
 	"copy": {
 		"ready": "you're late!",
-		"countdown": "show starts in",
+		"countdown": "show",
 		"nothing": "nothing to see here!",
 		"nouser": "stream is streaming. log in to view."
 	}
