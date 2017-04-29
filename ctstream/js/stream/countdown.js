@@ -26,7 +26,7 @@ stream.countdown = {
 			CT.dom.pad()
 		];
 		if (CT.info.mobile)
-			d.push(CT.dom.span("at " + stream.core.timestamp(show.ttl)));
+			d.push(CT.dom.span("on " + stream.core.timestamp(show.ttl)));
 		else {
 			d.push(CT.dom.span("starts in"));
 			d.push(CT.dom.pad());
