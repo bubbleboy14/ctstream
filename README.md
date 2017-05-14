@@ -9,19 +9,20 @@ This package includes all the machinery for building sites that feature streamin
     dirs = [hsdir]
     
     copies = {
+    	".": ["streamails.py"],
     	"img": ["audio.png", "remote_control.png", "save.png", "tv.png"],
     	"css": ["custom.css"]
     }
-    copies[hsdir] = ["countdown.html", "index.html", "schedule.html", "widget.html"]
+    copies[hsdir] = ["countdown.html", "index.html", "private.html", "schedule.html", "widget.html"]
     
     syms = {
-    	".": ["_pw.py"],
+    	".": ["_stream.py"],
     	"js": ["stream"],
     	"css": ["stream.css"]
     }
     
     routes = {
-    	"/_pw": "_pw.py"
+    	"/_stream": "_stream.py"
     }
 
 # Front (JS Config)
@@ -41,8 +42,13 @@ This package includes all the machinery for building sites that feature streamin
     	"background": null,
     	"back_message": null,
     	"end_message": null,
+    	"default_channel": "show",
     	"default_hostname": null,
     	"require_username": false,
+    	"allow_password": false,
+    	"stop_on_save": true,
+    	"transcode": false,
+    	"host_presence": false,
     	"stream_opts": {},
     	"multiplexer_opts": {
     		"chatblurs": ["say what?", "any questions?", "what's up?"],
@@ -52,7 +58,7 @@ This package includes all the machinery for building sites that feature streamin
     	},
     	"copy": {
     		"ready": "you're late!",
-    		"countdown": "show starts in",
+    		"countdown": "show",
     		"nothing": "nothing to see here!",
     		"nouser": "stream is streaming. log in to view."
     	}
