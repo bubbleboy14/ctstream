@@ -13,6 +13,8 @@
 	"end_message": null,
 	"default_channel": "show",
 	"default_hostname": null,
+	"require_admin": false,
+	"require_user": true,
 	"require_username": false,
 	"allow_password": false,
 	"stop_on_save": true,
