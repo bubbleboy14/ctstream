@@ -101,6 +101,10 @@ stream.core = {
 		CT.dom.setContent(stream.core._.nodes.test, streamer.getNode());
 		return direct ? streamer.echo : streamer.chunk;
 	},
+	handleReset: function(uname) {
+		CT.log("USER RESET!!!! " + uname);
+		stream.core._.multiplexer.chat(uname + " may be having trouble watching", "SYSTEM [HOST ONLY]");
+	},
 	multiplex: function(channel, chat, lurk) {
 		var c = core.config.ctstream, _ = stream.core._, opts = CT.merge({
 			chat: chat,
@@ -110,6 +114,8 @@ stream.core = {
 			node: _.nodes.video,
 			title: _.nodes.title
 		}, c.multiplexer_opts);
+		if (c.recover && (!lurk || c.admins.indexOf(opts.user) != -1))
+			opts.onerror = stream.core.handleReset;
 		if (c.back_message) {
 			opts.onstart = function() {
 				CT.dom.hide(_.nodes.back);

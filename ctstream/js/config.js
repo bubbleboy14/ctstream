@@ -19,8 +19,10 @@
 	"allow_password": false,
 	"stop_on_save": true,
 	"transcode": false,
+	"recover": false,
 	"host_presence": false,
 	"stream_opts": {},
+	"admins": [],
 	"multiplexer_opts": {
 		"chatblurs": ["say what?", "any questions?", "what's up?"],
 		"vidopts": {},
