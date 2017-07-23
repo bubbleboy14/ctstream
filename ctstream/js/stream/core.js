@@ -8,6 +8,7 @@ stream.core = {
 		multiplexer: null,
 		host: location.hostname,
 		testMode: "bounce", // stream|bounce
+		reset: " may be having trouble watching - if this persists, host should refresh",
 		nodes: {
 			parent: null,
 			test: CT.dom.div(null, null, "testnode"),
@@ -103,7 +104,7 @@ stream.core = {
 	},
 	handleReset: function(uname) {
 		CT.log("USER RESET!!!! " + uname);
-		stream.core._.multiplexer.chat(uname + " may be having trouble watching", "SYSTEM [HOST ONLY]");
+		stream.core._.multiplexer.chat(uname + stream.core._.reset, "SYSTEM [HOST ONLY]");
 	},
 	multiplex: function(channel, chat, lurk) {
 		var c = core.config.ctstream, _ = stream.core._, opts = CT.merge({
