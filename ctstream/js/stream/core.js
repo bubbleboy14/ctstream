@@ -114,8 +114,8 @@ stream.core = {
 			wserror: _.wserror,
 			node: _.nodes.video,
 			title: _.nodes.title
-		}, c.multiplexer_opts);
-		if (c.recover && (!lurk || c.admins.indexOf(opts.user) != -1))
+		}, c.multiplexer_opts), isAdmin = !lurk || c.admins.indexOf(opts.user) != -1;
+		if (c.recover && isAdmin)
 			opts.onerror = stream.core.handleReset;
 		if (c.back_message) {
 			opts.onstart = function() {
@@ -132,7 +132,7 @@ stream.core = {
 		var multiplexer = _.multiplexer = _.multiplexer
 			|| new CT.stream.Multiplexer(opts);
 		multiplexer.join(channel);
-		if (c.host_presence && !lurk) {
+		if (c.host_presence && isAdmin) {
 			CT.dom.setContent(_.nodes.title, _.presenceTracker());
 			_.nodes.title.classList.remove("hidden"); // may be hidden by "no_title"
 		} else
