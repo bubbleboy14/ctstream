@@ -104,7 +104,7 @@ stream.core = {
 	},
 	handleReset: function(uname) {
 		CT.log("USER RESET!!!! " + uname);
-		stream.core._.multiplexer.chat(uname + stream.core._.reset, "SYSTEM [HOST ONLY]");
+		stream.core._.multiplexer.chat({ data: uname + stream.core._.reset }, "SYSTEM [HOST ONLY]");
 	},
 	multiplex: function(channel, chat, lurk) {
 		var c = core.config.ctstream, _ = stream.core._, opts = CT.merge({
