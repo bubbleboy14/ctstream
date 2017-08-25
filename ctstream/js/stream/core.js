@@ -40,9 +40,16 @@ stream.core = {
 			});
 		},
 		presenceTracker: function() {
-			var n = CT.dom.div("(just you)");
-			CT.pubsub.set_cb("presence", function(p) {
+			var n = CT.dom.div("(just you)"),
+				hover = CT.dom.div(null, "round padded bordered whiteback");
+			CT.pubsub.set_cb("presence", function(p, channel) {
 				CT.dom.setContent(n, "count: " + p);
+				CT.dom.setContent(hover, CT.pubsub.presence(channel));
+			});
+			CT.hover.set({
+				node: n,
+				content: hover,
+				recursive: true
 			});
 			return n;
 		},
