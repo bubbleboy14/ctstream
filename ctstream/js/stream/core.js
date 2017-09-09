@@ -8,7 +8,6 @@ stream.core = {
 		multiplexer: null,
 		host: location.hostname,
 		testMode: "bounce", // stream|bounce
-		reset: " may be having trouble watching - if this persists, host should refresh",
 		nodes: {
 			parent: null,
 			test: CT.dom.div(null, null, "testnode"),
@@ -73,6 +72,14 @@ stream.core = {
 					]
 				]
 			})).show();
+		},
+		pass: function() {
+			return btoa(Date.now());
+		},
+		passes: function(token) {
+			var now = Date.now();
+			stream.core._.nextRefresh = now + 30000;
+			return token && (now - parseInt(atob(token)) < CT.stream.opts.reset);
 		}
 	},
 	setHost: function(host) {
@@ -110,8 +117,22 @@ stream.core = {
 		return direct ? streamer.echo : streamer.chunk;
 	},
 	handleReset: function(uname) {
+		var c = core.config.ctstream, _ = stream.core._;
 		CT.log("USER RESET!!!! " + uname);
-		stream.core._.multiplexer.chat({ data: uname + stream.core._.reset }, "SYSTEM [HOST ONLY]");
+		if (c.admins.indexOf(c.multiplexer_opts.user) != -1)
+			_.multiplexer.chat({ data: uname + " glitched" }, "SYSTEM");
+		if (_.recorder) {
+			var n = Date.now();
+			if (_.refreshed) {
+				var diff = n - _.refreshed;
+				CT.log("USER RESET diff " + diff);
+//				if (diff < CT.stream.opts.chunk)
+//					return;
+				if (diff < CT.stream.opts.reset)
+					stream.core.refresh();
+			}
+			_.refreshed = n;
+		}
 	},
 	multiplex: function(channel, chat, lurk) {
 		var c = core.config.ctstream, _ = stream.core._, opts = CT.merge({
@@ -175,6 +196,19 @@ stream.core = {
 			stream.core._.stream = vstream;
 		});
 	},
+	refresh: function() {
+		CT.log("RESET refresh!!!");
+		if (stream.core._.nextRefresh && stream.core._.nextRefresh > Date.now())
+			return;
+		var sk = core.config.ctstream.storage_key;
+		CT.storage.set(sk, CT.merge({
+			bypass: stream.core._.pass() 
+		}, CT.storage.get(sk)));
+		window.location = location.pathname;
+//		stream.core._.recorder.stop();
+//		stream.core._.multiplexer.initChunk = false;
+//		stream.core._.recorder.start();
+	},
 	startTest: function() {
 		if (stream.core._.testMode == "bounce") {
 			var streamer = new CT.stream.Streamer();
@@ -190,10 +224,10 @@ stream.core = {
 	resizeWidget: function() {
 		CT.dom.className("widget")[0].style.zoom = CT.align.height() / 440;
 	},
-	_start: function(channel, cnode, lurk) {
+	_start: function(channel, cnode, lurk, bypass) {
 		if (lurk)
 			stream.core.multiplex(channel, cnode, true);
-		else if (core.config.ctstream.open_stream)
+		else if (core.config.ctstream.open_stream || stream.core._.passes(bypass))
 			stream.core.startRecord(stream.core.multiplex(channel, cnode));
 		else {
 			stream.core.credz(function() {
@@ -201,7 +235,7 @@ stream.core = {
 			});
 		}
 	},
-	startMultiplex: function(channel, chat, lurk, zoom, user, inferred) {
+	startMultiplex: function(channel, chat, lurk, zoom, user, inferred, bypass) {
 		var cnode;
 		if (arguments.length == 1 && typeof arguments[0] != "string") {
 			var obj = arguments[0];
@@ -211,6 +245,7 @@ stream.core = {
 			zoom = obj.zoom;
 			user = obj.user;
 			inferred = obj.inferred;
+			bypass = obj.bypass;
 		}
 		if (chat) {
 			cnode = CT.dom.div(null, "abs t0 r0 b0 w195p");
@@ -241,7 +276,7 @@ stream.core = {
 				return p.show();
 			}
 		}
-		stream.core._start(channel, cnode, lurk);
+		stream.core._start(channel, cnode, lurk, bypass);
 	},
 	tvButton: function(cb, title, fname) {
 		var b = CT.dom.img("/img/" + (fname || "tv") + ".png", "abs b0 m5", function() {
