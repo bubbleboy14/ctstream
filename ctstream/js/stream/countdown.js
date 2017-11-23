@@ -30,7 +30,7 @@ stream.countdown = {
 		else {
 			d.push(CT.dom.span("starts in"));
 			d.push(CT.dom.pad());
-			d.push(CT.parse.countdown(show.ttl));
+			d.push(CT.parse.countdown(show.ttl, stream.countdown.ready));
 			d.push(CT.dom.pad());
 			d.push(CT.dom.span("(your time: " + stream.core.timestamp(show.ttl) + ")"));
 		}
@@ -40,7 +40,13 @@ stream.countdown = {
 		return show ? (show.ttl > 0 ? stream.countdown._count(show) :
 			stream.countdown._show_or_no(show)) : core.config.ctstream.copy.nothing;
 	},
+	ready: function() {
+		var o = stream.countdown._opts;
+		o.show.ttl = 0;
+		stream.countdown.load(o.show, o.node, o.extras);
+	},
 	load: function(show, node, extra) {
+		stream.countdown._opts = { show: show, node: node, extra: extra };
 		var content = stream.countdown.node(show), _valid = function() {
 //			if (show)
 //				return content != core.config.ctstream.copy.nouser.replace("[HOST]", show.meta.host);
