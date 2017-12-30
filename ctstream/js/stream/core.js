@@ -13,7 +13,7 @@ stream.core = {
 			test: CT.dom.div(null, null, "testnode"),
 			video: CT.dom.div(null, "abs all0", "vnode"),
 			back: CT.dom.marquee(core.config.ctstream.back_message, "gigantic bold pt1-2", null, true),
-			title: CT.dom.div(null, "biggest bold centered"),
+			title: CT.dom.div(null, "biggest bold centered above relative"),
 			link: CT.dom.div([
 				CT.dom.node("Ctr-C to Copy URL"),
 				CT.dom.field()
