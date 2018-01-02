@@ -4,7 +4,7 @@ dirs = [hsdir]
 
 copies = {
 	".": ["streamails.py"],
-	"img": ["audio.png", "remote_control.png", "save.png", "tv.png"],
+	"img": ["audio.png", "fullscreen.png", "remote_control.png", "save.png", "tv.png"],
 	"css": ["custom.css"]
 }
 copies[hsdir] = ["countdown.html", "index.html", "private.html", "schedule.html", "widget.html"]
