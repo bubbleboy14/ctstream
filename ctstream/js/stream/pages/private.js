@@ -6,8 +6,8 @@ var pwPrompt = function(cfg) {
 		prompt: "what's the password?",
 		cb: function(val) {
 			CT.memcache.countdown.get(val, function(show) {
-				cfg.chat = true;
-				cfg.lurk = true;
+				cfg.chat = core.config.ctstream.defaults.chat;
+				cfg.lurk = core.config.ctstream.defaults.lurk;
 				if (show && show.token == cfg.channel) {
 					CT.storage.set(core.config.ctstream.storage_key, cfg);
 					location = "/stream";
