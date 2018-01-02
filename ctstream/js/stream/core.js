@@ -356,12 +356,10 @@ stream.core = {
 						noClose: true,
 						prompt: "nickname?",
 						cb: function(uname) {
-							stream.core.startMultiplex({
-								chat: true,
-								lurk: true,
+							stream.core.startMultiplex(CT.merge({
 								user: uname,
 								channel: chan
-							});
+							}, core.config.ctstream.defaults));
 						}
 					})).show();
 				});

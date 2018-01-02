@@ -23,6 +23,10 @@
 	"host_presence": false,
 	"stream_opts": {},
 	"admins": [],
+	"defaults": {
+		"chat": true,
+		"lurk": true
+	},
 	"multiplexer_opts": {
 		"chatblurs": ["say what?", "any questions?", "what's up?"],
 		"vidopts": {},
