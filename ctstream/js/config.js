@@ -21,6 +21,7 @@
 	"transcode": false,
 	"recover": false,
 	"host_presence": false,
+	"beforeunload": null,
 	"stream_opts": {},
 	"admins": [],
 	"defaults": {

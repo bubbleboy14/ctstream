@@ -19,6 +19,7 @@ CT.onload(function() {
 	CT.initCore();
 	stream.core.init();
 	CT.on("beforeunload", function() {
+		cfg.beforeunload && cfg.beforeunload();
 		if (cfg.require_admin && !(user && user.core.get() && user.core.get().admin))
 			CT.storage.clear();
 	});
