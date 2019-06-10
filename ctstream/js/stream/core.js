@@ -172,21 +172,19 @@ stream.core = {
 		};
 	},
 	stopRecord: function() {
-		stream.core._.stream.getTracks().forEach(function(track) {
+		var _ = stream.core._;
+		_.stream.getTracks().forEach(function(track) {
 			track.stop();
 		});
-		stream.core._.recorder.stop();
-		stream.core._.recorder._stopped = true;
-		var testnode = stream.core._.nodes.test.firstChild;
+		if (_.recorder) { // not created in stream-mode test...
+			_.recorder.stop();
+			_.recorder._stopped = true;
+		}
+		var testnode = _.nodes.test.firstChild;
 		if (testnode) { // handles stream test
 			var v = testnode.video || testnode;
 			v.pause();
-			if (CT.info.isChrome)
-				v.src = "";
-			else if (CT.info.isFirefox)
-				v.mozSrcObject = null;
-			else
-				v.src = null;
+			v.src = v.srcObject = null;
 			CT.dom.remove(v);
 		}
 	},
@@ -210,14 +208,16 @@ stream.core = {
 //		stream.core._.recorder.start();
 	},
 	startTest: function() {
-		if (stream.core._.testMode == "bounce") {
+		var _ = stream.core._;
+		if (_.testMode == "bounce") {
 			var streamer = new CT.stream.Streamer();
-			CT.dom.setContent(stream.core._.nodes.test, streamer.getNode());
+			CT.dom.setContent(_.nodes.test, streamer.getNode());
 			stream.core.startRecord(streamer.echo);
 		} else { // stream
-			navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-				CT.dom.setContent(stream.core._.nodes.test, CT.dom.video(URL.createObjectURL(stream),
-					null, null, { autoplay: true, mozSrcObject: stream }));
+			navigator.mediaDevices.getUserMedia({ video: true }).then(function(strm) {
+				_.stream = strm;
+				CT.dom.setContent(_.nodes.test, CT.dom.video(strm,
+					null, null, { autoplay: true }));
 			});
 		}
 	},
