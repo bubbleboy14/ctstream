@@ -21,7 +21,7 @@ stream.core = {
 		},
 		copyLink: function(channel) {
 			var cname = channel;
-			if (cname.length > 80 && cname.indexOf(" ") == -1)
+			if (cname.length > 40 && cname.indexOf(" ") == -1)
 				cname = "private chat";
 			return CT.dom.link(cname + " (link)", function() {
 				var cbnode = stream.core._.nodes.link;
