@@ -205,7 +205,7 @@ stream.core = {
 		CT.storage.set(sk, CT.merge({
 			bypass: stream.core._.pass() 
 		}, CT.storage.get(sk)));
-		window.location = location.pathname;
+		window.location = location.pathname + location.hash;
 //		stream.core._.recorder.stop();
 //		stream.core._.multiplexer.initChunk = false;
 //		stream.core._.recorder.start();
@@ -289,10 +289,15 @@ stream.core = {
 		}, null, null, title, null, "w80p h80p inline-block");
 		return b;
 	},
+	setChannel: function(channel) {
+		if (core.config.ctstream.recover && location.pathname == "/stream")
+			location.hash = channel;
+		stream.core.startMultiplex(channel);
+	},
 	channelButton: function(channel) {
 		return {
 			content: stream.core.tvButton(function() {
-				stream.core.startMultiplex(channel);
+				stream.core.setChannel(channel);
 			}, channel)
 		};
 	},
@@ -305,7 +310,7 @@ stream.core = {
 			transition: "slide",
 			slide: { origin: "bottomright" },
 			prompt: "Join A Channel",
-			cb: stream.core.startMultiplex
+			cb: stream.core.setChannel
 		});
 		m.showHide(stream.core._.nodes.parent);
 	},
