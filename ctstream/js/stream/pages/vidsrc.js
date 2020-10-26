@@ -3,17 +3,18 @@ CT.require("core");
 CT.pubsub.set_protocol("wss");
 
 CT.onload(function() {
-	var targetOrigin, channel, user = "embedded" + CT.data.random(100000);
+	var targetOrigin, chans = {}, user = "embedded" + CT.data.random(100000);
 	CT.pubsub.connect(location.hostname, core.config.ctstream.port, user);
 	window.addEventListener("message", function(evt) {
 		var d = event.data;
 		if (d.action) {
 			targetOrigin = evt.origin;
 			if (d.action == "subscribe") {
-				channel = d.data;
-				CT.pubsub.subscribe(channel);
+				chans[d.data] = {};
+				CT.pubsub.subscribe(d.data);
 			} else if (d.action == "error") {
-				CT.pubsub.publish(channel, {
+				chans[d.data.channel].requiredInitChunk = d.requiredInitChunk;
+				CT.pubsub.publish(d.data.channel, {
 					action: "error",
 					data: user
 				});
@@ -32,7 +33,8 @@ CT.onload(function() {
 						}
 					}, targetOrigin);
 				});
-			});
+			}, chans[data.channel].requiredInitChunk);
+			delete chans[data.channel].requiredInitChunk;
 		}
 	});
 });
