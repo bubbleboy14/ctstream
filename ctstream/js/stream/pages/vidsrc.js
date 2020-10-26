@@ -7,10 +7,11 @@ CT.onload(function() {
 	CT.pubsub.connect(location.hostname, core.config.ctstream.port,
 		"embedded" + CT.data.random(100000));
 	window.addEventListener("message", function(evt) {
-		targetOrigin = evt.origin;
 		var d = event.data;
-		if (d.action == "subscribe")
+		if (d.action == "subscribe") {
+			targetOrigin = evt.origin;
 			CT.pubsub.subscribe(d.data);
+		}
 	});
 	CT.pubsub.set_cb("message", function(data) {
 		if (data.message.action == "clip") {
