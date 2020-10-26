@@ -146,7 +146,7 @@ stream.core = {
 			node: _.nodes.video,
 			title: _.nodes.title
 		}, c.multiplexer_opts), isAdmin = !lurk || c.admins.indexOf(opts.user) != -1;
-		if (c.recover && isAdmin)
+		if (c.recover)
 			opts.onerror = stream.core.handleReset;
 		if (c.back_message) {
 			opts.onstart = function() {
@@ -205,7 +205,8 @@ stream.core = {
 		CT.storage.set(sk, CT.merge({
 			bypass: stream.core._.pass() 
 		}, CT.storage.get(sk)));
-		window.location = location.pathname + location.hash;
+		window.location.reload();
+//		window.location = location.pathname + location.hash;
 //		stream.core._.recorder.stop();
 //		stream.core._.multiplexer.initChunk = false;
 //		stream.core._.recorder.start();
