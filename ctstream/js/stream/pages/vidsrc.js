@@ -3,14 +3,21 @@ CT.require("core");
 CT.pubsub.set_protocol("wss");
 
 CT.onload(function() {
-	var targetOrigin;
-	CT.pubsub.connect(location.hostname, core.config.ctstream.port,
-		"embedded" + CT.data.random(100000));
+	var targetOrigin, channel, user = "embedded" + CT.data.random(100000);
+	CT.pubsub.connect(location.hostname, core.config.ctstream.port, user);
 	window.addEventListener("message", function(evt) {
 		var d = event.data;
-		if (d.action == "subscribe") {
+		if (d.action) {
 			targetOrigin = evt.origin;
-			CT.pubsub.subscribe(d.data);
+			if (d.action == "subscribe") {
+				channel = d.data;
+				CT.pubsub.subscribe(channel);
+			} else if (d.action == "error") {
+				CT.pubsub.publish(channel, {
+					action: "error",
+					data: user
+				});
+			}
 		}
 	});
 	CT.pubsub.set_cb("message", function(data) {
