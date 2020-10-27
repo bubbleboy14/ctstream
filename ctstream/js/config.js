@@ -20,6 +20,7 @@
 	"stop_on_save": true,
 	"transcode": false,
 	"recover": false,
+	"reconnect": false,
 	"host_presence": false,
 	"beforeunload": null,
 	"stream_opts": {},

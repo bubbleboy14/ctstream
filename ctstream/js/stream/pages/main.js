@@ -1,10 +1,9 @@
 CT.require("CT.all");
-CT.require("CT.stream");
 CT.require("core");
 CT.require("stream.core");
 CT.pubsub.set_protocol("wss");
-CT.pubsub.set_reconnect(false);
 var cfg = core.config.ctstream;
+CT.pubsub.set_reconnect(cfg.reconnect);
 if (cfg.transcode)
 	CT.stream.opts.setTranscoder(stream.core.transcode);
 

@@ -7,7 +7,7 @@ copies = {
 	"img": ["audio.png", "fullscreen.png", "remote_control.png", "save.png", "tv.png"],
 	"css": ["custom.css"]
 }
-copies[hsdir] = ["countdown.html", "index.html", "private.html", "schedule.html", "widget.html"]
+copies[hsdir] = ["countdown.html", "index.html", "private.html", "schedule.html", "widget.html", "vidsrc.html"]
 
 syms = {
 	".": ["_stream.py"],
