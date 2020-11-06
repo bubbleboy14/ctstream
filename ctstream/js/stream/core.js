@@ -56,7 +56,8 @@ stream.core = {
 			return n;
 		},
 		wserror: function() {
-			(new CT.modal.Modal({
+			var _ = stream.core._;
+			_.oops = _.oops || new CT.modal.Modal({
 				transition: "slide",
 				slide: {
 					origin: "bottom"
@@ -66,7 +67,7 @@ stream.core = {
 					[
 						CT.dom.span("Looks like your browser is too shy to talk to our WebSocket server. Click"),
 						CT.dom.pad(),
-						CT.dom.link("here", null, "https://" + stream.core._.host + ":" + core.config.ctstream.port,
+						CT.dom.link("here", null, "https://" + _.host + ":" + core.config.ctstream.port,
 							null, null, null, true),
 						CT.dom.pad(),
 						CT.dom.span("to introduce them!"),
@@ -74,7 +75,8 @@ stream.core = {
 						CT.dom.span("This is probably happening because we're using a self-signed SSL certificate, which just means we didn't buy someone's stamp of approval. It's not less safe, just less expensive. And you might want/need to refresh this page after.")
 					]
 				]
-			})).show();
+			});
+			_.oops.show();
 		},
 		pass: function() {
 			return btoa(Date.now());
