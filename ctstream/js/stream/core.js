@@ -205,7 +205,8 @@ stream.core = {
 		CT.storage.set(sk, CT.merge({
 			bypass: stream.core._.pass() 
 		}, CT.storage.get(sk)));
-		window.location.reload();
+		stream.core._.recorder.reset();
+//		window.location.reload();
 //		window.location = location.pathname + location.hash;
 //		stream.core._.recorder.stop();
 //		stream.core._.multiplexer.initChunk = false;
