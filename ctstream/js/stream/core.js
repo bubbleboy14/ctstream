@@ -8,6 +8,11 @@ stream.core = {
 		multiplexer: null,
 		host: location.hostname,
 		testMode: "bounce", // stream|bounce
+		mode: "camera",
+		modes: {
+			camera: "getUserMedia",
+			screenshare: "getDisplayMedia"
+		},
 		nodes: {
 			parent: null,
 			test: CT.dom.div(null, null, "testnode"),
@@ -194,10 +199,11 @@ stream.core = {
 		}
 	},
 	startRecord: function(cb) {
+		var _ = stream.core._;
 		CT.stream.util.record(cb, function(rec, vstream) {
-			stream.core._.recorder = rec;
-			stream.core._.stream = vstream;
-		});
+			_.recorder = rec;
+			_.stream = vstream;
+		}, null, _.modes[_.mode]);
 	},
 	refresh: function() {
 		CT.log("RESET refresh!!!");
@@ -322,6 +328,22 @@ stream.core = {
 		core.config.footer.links.push({
 			content: stream.core.tvButton(stream.core.selectChannel,
 				"Remote Control", "remote_control")
+		});
+	},
+	loadModeSwapper: function() {
+		var _ = stream.core._;
+		core.config.footer.links.unshift({
+			content: "swap mode",
+			className: "glowing",
+			cb: function() {
+				CT.modal.choice({
+					prompt: "current: " + _.mode + ". note that screenshare mode is experimental (try firefox).",
+					data: ["camera", "screenshare"],
+					cb: function(mode) {
+						_.mode = mode;
+					}
+				});
+			}
 		});
 	},
 	credz: function(cb) {
