@@ -14,6 +14,7 @@ CT.onload(function() {
 	if (core.config.footer) {
 		cfg.channels.length && stream.core.loadChannels(cfg.channels);
 		stream.core.loadRemote();
+		stream.core.loadModeSwapper();
 	}
 	CT.initCore();
 	stream.core.init();
