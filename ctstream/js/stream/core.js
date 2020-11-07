@@ -240,12 +240,15 @@ stream.core = {
 	_start: function(channel, cnode, lurk, bypass) {
 		if (lurk)
 			stream.core.multiplex(channel, cnode, true);
-		else if (core.config.ctstream.open_stream || stream.core._.passes(bypass))
-			stream.core.startRecord(stream.core.multiplex(channel, cnode));
 		else {
-			stream.core.credz(function() {
+			if (core.config.ctstream.open_stream || stream.core._.passes(bypass))
 				stream.core.startRecord(stream.core.multiplex(channel, cnode));
-			});
+			else {
+				stream.core.credz(function() {
+					stream.core.startRecord(stream.core.multiplex(channel, cnode));
+				});
+			}
+			CT.pubsub.meta(channel, { mode: stream.core._.mode });
 		}
 	},
 	startMultiplex: function(channel, chat, lurk, zoom, user, inferred, bypass) {
