@@ -37,4 +37,13 @@ CT.onload(function() {
 			delete chans[data.channel].requiredInitChunk;
 		}
 	});
+	CT.pubsub.set_cb("meta", function(data) {
+		window.parent.postMessage({
+			action: "mode",
+			data: {
+				channel: data.channel,
+				mode: data.meta.mode
+			}
+		}, targetOrigin);
+	});
 });
