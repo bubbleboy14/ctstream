@@ -340,7 +340,7 @@ stream.core = {
 			className: "glowing",
 			cb: function() {
 				CT.modal.choice({
-					prompt: "current: " + _.mode + ". note that screenshare mode is experimental (try firefox).",
+					prompt: "current: " + _.mode,
 					data: ["camera", "screenshare"],
 					cb: function(mode) {
 						_.mode = mode;
