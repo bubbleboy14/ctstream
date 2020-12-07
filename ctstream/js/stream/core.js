@@ -83,6 +83,19 @@ stream.core = {
 			});
 			_.oops.show();
 		},
+		camsel: function() {
+			var _ = stream.core._, vinputs;
+			navigator.mediaDevices.enumerateDevices().then(function(devices) {
+				vinputs = devices.filter(d => d.kind == "videoinput");
+				(vinputs.length == 1) || CT.modal.choice({
+					prompt: "which camera?",
+					data: vinputs,
+					cb: function(device) {
+						_.deviceId = device.deviceId;
+					}
+				})
+			});
+		},
 		pass: function() {
 			return btoa(Date.now());
 		},
@@ -203,7 +216,7 @@ stream.core = {
 		CT.stream.util.record(cb, function(rec, vstream) {
 			_.recorder = rec;
 			_.stream = vstream;
-		}, null, _.modes[_.mode]);
+		}, null, _.modes[_.mode], _.deviceId);
 	},
 	refresh: function() {
 		CT.log("RESET refresh!!!");
@@ -344,6 +357,7 @@ stream.core = {
 					data: ["camera", "screenshare"],
 					cb: function(mode) {
 						_.mode = mode;
+						(mode == "camera") && _.camsel();
 					}
 				});
 			}
