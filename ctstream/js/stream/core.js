@@ -219,14 +219,17 @@ stream.core = {
 		}, null, _.modes[_.mode], _.deviceId);
 	},
 	refresh: function() {
+		var _ = stream.core._;
 		CT.log("RESET refresh!!!");
-		if (stream.core._.nextRefresh && stream.core._.nextRefresh > Date.now())
+		if (_.nextRefresh && _.nextRefresh > Date.now())
 			return;
 		var sk = core.config.ctstream.storage_key;
 		CT.storage.set(sk, CT.merge({
 			bypass: stream.core._.pass() 
 		}, CT.storage.get(sk)));
-		stream.core._.recorder.reset();
+
+		_.recorder.reset();
+		_.multiplexer.initChunk = false;
 //		window.location.reload();
 //		window.location = location.pathname + location.hash;
 //		stream.core._.recorder.stop();
