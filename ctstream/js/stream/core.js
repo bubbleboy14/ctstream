@@ -3,6 +3,7 @@ CT.require("stream.schedule");
 
 stream.core = {
 	_: {
+		refreshes: 0,
 		stream: null,
 		recorder: null,
 		multiplexer: null,
@@ -151,8 +152,10 @@ stream.core = {
 				CT.log("USER RESET diff " + diff);
 //				if (diff < CT.stream.opts.chunk)
 //					return;
-				if (diff < CT.stream.opts.reset)
-					stream.core.refresh();
+				if (diff < CT.stream.opts.reset) {
+					delete _.refreshed;
+					return stream.core.refresh();
+				}
 			}
 			_.refreshed = n;
 		}
@@ -219,18 +222,22 @@ stream.core = {
 		}, null, _.modes[_.mode], _.deviceId);
 	},
 	refresh: function() {
-		var _ = stream.core._;
-		CT.log("RESET refresh!!!");
+		var _ = stream.core._,
+			sk = core.config.ctstream.storage_key;
+		_.refreshes += 1;
+		CT.log("RESET refresh!!! " + _.refreshes);
 		if (_.nextRefresh && _.nextRefresh > Date.now())
 			return;
-		var sk = core.config.ctstream.storage_key;
-		CT.storage.set(sk, CT.merge({
-			bypass: stream.core._.pass() 
-		}, CT.storage.get(sk)));
+		if (_.refreshes < 5) {
+			_.recorder.reset();
+			_.multiplexer.initChunk = false;
+		} else {
+			CT.storage.set(sk, CT.merge({
+				bypass: stream.core._.pass() 
+			}, CT.storage.get(sk)));
+			window.location.reload();
+		}
 
-		_.recorder.reset();
-		_.multiplexer.initChunk = false;
-//		window.location.reload();
 //		window.location = location.pathname + location.hash;
 //		stream.core._.recorder.stop();
 //		stream.core._.multiplexer.initChunk = false;
