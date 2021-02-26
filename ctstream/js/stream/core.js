@@ -228,7 +228,7 @@ stream.core = {
 		CT.log("RESET refresh!!! " + _.refreshes);
 		if (_.nextRefresh && _.nextRefresh > Date.now())
 			return;
-		if (_.refreshes < 5) {
+		if (_.refreshes < 4) {
 			_.recorder.reset();
 			_.multiplexer.initChunk = false;
 		} else {
