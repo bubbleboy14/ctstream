@@ -10,7 +10,7 @@ CT.onload(function() {
 		if (d.action) {
 			targetOrigin = evt.origin;
 			if (d.action == "subscribe") {
-				chans[d.data] = {};
+				chans[d.data] = { requiredInitChunk: "unset" };
 				CT.pubsub.subscribe(d.data);
 			} else if (d.action == "error") {
 				chans[d.data.channel].requiredInitChunk = d.requiredInitChunk;
@@ -23,6 +23,9 @@ CT.onload(function() {
 	});
 	CT.pubsub.set_cb("message", function(data) {
 		if (data.message.action == "clip") {
+			var cdata = chans[data.channel];
+			if (cdata.requiredInitChunk == "unset")
+				cdata.requiredInitChunk = data.channel + data.user + "init";
 			CT.stream.util.update(data.message.data, function(blob) {
 				CT.stream.util.blob_to_buffer(blob, function(buffer) {
 					window.parent.postMessage({
@@ -33,8 +36,8 @@ CT.onload(function() {
 						}
 					}, targetOrigin);
 				});
-			}, chans[data.channel].requiredInitChunk);
-			delete chans[data.channel].requiredInitChunk;
+			}, cdata.requiredInitChunk);
+			delete cdata.requiredInitChunk;
 		}
 	});
 	CT.pubsub.set_cb("meta", function(data) {
