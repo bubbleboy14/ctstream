@@ -100,9 +100,13 @@ stream.core = {
 		pass: function() {
 			return btoa(Date.now());
 		},
+		setRefresh: function(now) {
+			now = now || Date.now();
+			stream.core._.nextRefresh = now + 5000;
+		},
 		passes: function(token) {
 			var now = Date.now();
-			stream.core._.nextRefresh = now + 30000;
+			stream.core._.setRefresh(now);
 			return token && (now - parseInt(atob(token)) < CT.stream.opts.reset);
 		}
 	},
@@ -152,6 +156,7 @@ stream.core = {
 				CT.log("USER RESET diff " + diff);
 //				if (diff < CT.stream.opts.chunk)
 //					return;
+				_.multiplexer.initChunk = false;
 				if (diff < CT.stream.opts.reset) {
 					delete _.refreshed;
 					return stream.core.refresh();
@@ -186,6 +191,7 @@ stream.core = {
 		var multiplexer = _.multiplexer = _.multiplexer
 			|| new CT.stream.Multiplexer(opts);
 		multiplexer.join(channel);
+		_.channel = channel;
 		if (c.host_presence && isAdmin) {
 			CT.dom.setContent(_.nodes.title, _.presenceTracker());
 			_.nodes.title.classList.remove("hidden"); // may be hidden by "no_title"
@@ -199,11 +205,11 @@ stream.core = {
 	},
 	stopRecord: function() {
 		var _ = stream.core._;
-		_.stream.getTracks().forEach(function(track) {
-			track.stop();
-		});
+//		_.stream.getTracks().forEach(function(track) {
+//			track.stop();
+//		});
 		if (_.recorder) { // not created in stream-mode test...
-			_.recorder.stop();
+			_.recorder.state != "inactive" && _.recorder.stop();
 			_.recorder._stopped = true;
 		}
 		var testnode = _.nodes.test.firstChild;
@@ -214,12 +220,23 @@ stream.core = {
 			CT.dom.remove(v);
 		}
 	},
-	startRecord: function(cb) {
+	startRecord: function(cb, vid) {
 		var _ = stream.core._;
+		_.cb = cb;
 		CT.stream.util.record(cb, function(rec, vstream) {
 			_.recorder = rec;
 			_.stream = vstream;
+			if (vid)
+				vid.video.srcObject = vstream;
 		}, null, _.modes[_.mode], _.deviceId);
+	},
+	reset: function() {
+		var _ = stream.core._;
+		CT.log("STREAM CORE RESET");
+		CT.pubsub.unsubscribe(_.channel);
+		stream.core.stopRecord();
+		stream.core.startRecord(_.cb, _.recorder.video);
+		CT.pubsub.subscribe(_.channel);
 	},
 	refresh: function() {
 		var _ = stream.core._,
@@ -228,10 +245,10 @@ stream.core = {
 		CT.log("RESET refresh!!! " + _.refreshes);
 		if (_.nextRefresh && _.nextRefresh > Date.now())
 			return;
-		if (_.refreshes < 4) {
-			_.recorder.reset();
-			_.multiplexer.initChunk = false;
-		} else {
+		_.setRefresh();
+		if (_.refreshes < 8) 
+			stream.core.reset();
+		else {
 			CT.storage.set(sk, CT.merge({
 				bypass: stream.core._.pass() 
 			}, CT.storage.get(sk)));
