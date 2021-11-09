@@ -3,7 +3,8 @@ CT.require("core");
 CT.pubsub.set_protocol("wss");
 
 CT.onload(function() {
-	var targetOrigin, chans = {}, user = "embedded" + CT.data.random(100000);
+	var targetOrigin, chans = {}, senders = {},
+		user = "embedded" + CT.data.random(100000);
 	CT.pubsub.connect(location.hostname, core.config.ctstream.port, user);
 	window.addEventListener("message", function(evt) {
 		var d = event.data;
@@ -16,13 +17,17 @@ CT.onload(function() {
 				chans[d.data.channel].requiredInitChunk = d.requiredInitChunk;
 				CT.pubsub.publish(d.data.channel, {
 					action: "error",
-					data: user
+					data: {
+						user: user,
+						sender: senders[d.data.channel]
+					}
 				});
 			}
 		}
 	});
 	CT.pubsub.set_cb("message", function(data) {
 		if (data.message.action == "clip") {
+			senders[data.channel] = data.user;
 			var cdata = chans[data.channel];
 			if (cdata.requiredInitChunk == "unset")
 				cdata.requiredInitChunk = data.channel + data.user + "init";
