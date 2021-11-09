@@ -144,12 +144,14 @@ stream.core = {
 		CT.dom.setContent(stream.core._.nodes.test, streamer.getNode());
 		return direct ? streamer.echo : streamer.chunk;
 	},
-	handleReset: function(uname) {
-		var c = core.config.ctstream, _ = stream.core._;
-		CT.log("USER RESET!!!! " + uname);
-		if (c.admins.indexOf(c.multiplexer_opts.user) != -1)
+	handleReset: function(edata) {
+		var c = core.config.ctstream, _ = stream.core._,
+			uname = edata.user, sender = edata.sender,
+			youser = c.multiplexer_opts.user || _.uname;
+		CT.log("USER RESET!!!! " + uname + " (" + sender + ")");
+		if (c.admins.indexOf(youser) != -1)
 			_.multiplexer.chat({ data: uname + " glitched" }, "SYSTEM");
-		if (_.recorder) {
+		if (_.recorder && sender == youser) {
 			var n = Date.now();
 			if (_.refreshed) {
 				var diff = n - _.refreshed;
@@ -192,6 +194,7 @@ stream.core = {
 			|| new CT.stream.Multiplexer(opts);
 		multiplexer.join(channel);
 		_.channel = channel;
+		_.uname = multiplexer.opts.user;
 		if (c.host_presence && isAdmin) {
 			CT.dom.setContent(_.nodes.title, _.presenceTracker());
 			_.nodes.title.classList.remove("hidden"); // may be hidden by "no_title"
