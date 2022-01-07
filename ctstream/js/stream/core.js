@@ -102,7 +102,7 @@ stream.core = {
 		},
 		setRefresh: function(now) {
 			now = now || Date.now();
-			stream.core._.nextRefresh = now + 5000;
+			stream.core._.nextRefresh = now + CT.stream.opts.resetWait;
 		},
 		passes: function(token) {
 			var now = Date.now();
