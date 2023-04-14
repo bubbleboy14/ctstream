@@ -11,7 +11,7 @@ CT.onload(function() {
 				data: buffer
 			}
 		}, targetOrigin);
-	}, targetOrigin, chans = {}, senders = {},
+	}, targetOrigin, chans = {}, senders = {}, udata = {},
 		user = "embedded" + CT.data.random(100000);
 	CT.pubsub.connect(location.hostname, core.config.ctstream.port, user);
 	window.addEventListener("message", function(evt) {
@@ -36,6 +36,10 @@ CT.onload(function() {
 				CT.require("stream.core", true);
 				stream.core.startRecord(stream.core.multiplex(d.data,
 					false, false, true, buffer => procBuff(buffer, d.data)));
+			} else if (d.action == "push") {
+				CT.stream.util.push(d.data.blob, d.data.channel,
+					CT.stream.util.sig(d.data.channel, user, d.data.segment,
+						chans[d.data.channel] || udata));
 			}
 		}
 	});
