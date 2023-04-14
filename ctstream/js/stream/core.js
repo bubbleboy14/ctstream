@@ -167,7 +167,7 @@ stream.core = {
 			_.refreshed = n;
 		}
 	},
-	multiplex: function(channel, chat, lurk) {
+	multiplex: function(channel, chat, lurk, noco, onbuff) {
 		var c = core.config.ctstream, _ = stream.core._, opts = CT.merge({
 			chat: chat,
 			port: c.port,
@@ -190,6 +190,8 @@ stream.core = {
 				_.nodes.back.start();
 			};
 		}
+		if (noco)
+			opts.autoconnect = false;
 		var multiplexer = _.multiplexer = _.multiplexer
 			|| new CT.stream.Multiplexer(opts);
 		multiplexer.join(channel);
@@ -204,6 +206,7 @@ stream.core = {
 			var vid = multiplexer.push(blobs, segment, channel, _.stream);
 			if (!_.recorder.video)
 				_.recorder.video = vid;
+			onbuff && CT.stream.util.blob_to_buffer(blobs.video, onbuff);
 		};
 	},
 	stopRecord: function() {
