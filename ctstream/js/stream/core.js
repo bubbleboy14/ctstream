@@ -252,7 +252,7 @@ stream.core = {
 		if (_.nextRefresh && _.nextRefresh > Date.now())
 			return;
 		_.setRefresh();
-		if (_.refreshes < 8) 
+		if (_.refreshes < CT.stream.opts.resetLimit) 
 			stream.core.reset();
 		else {
 			CT.storage.set(sk, CT.merge({
