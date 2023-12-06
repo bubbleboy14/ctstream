@@ -144,7 +144,7 @@ stream.core = {
 		CT.dom.setContent(stream.core._.nodes.test, streamer.getNode());
 		return direct ? streamer.echo : streamer.chunk;
 	},
-	handleReset: function(edata) {
+	handleReset: function(edata, channel) {
 		var c = core.config.ctstream, _ = stream.core._,
 			uname = edata.user, sender = edata.sender,
 			youser = c.multiplexer_opts.user || _.uname;
@@ -161,7 +161,7 @@ stream.core = {
 				_.multiplexer.initChunk = false;
 				if (diff < CT.stream.opts.reset) {
 					delete _.refreshed;
-					return stream.core.refresh();
+					return stream.core.refresh(channel);
 				}
 			}
 			_.refreshed = n;
@@ -244,15 +244,17 @@ stream.core = {
 		stream.core.startRecord(_.cb, _.recorder.video);
 		CT.pubsub.subscribe(_.channel);
 	},
-	refresh: function() {
-		var _ = stream.core._,
+	refresh: function(chan) {
+		var _ = stream.core._, rl = CT.stream.opts.resetLimit,
 			sk = core.config.ctstream.storage_key;
 		_.refreshes += 1;
 		CT.log("RESET refresh!!! " + _.refreshes);
 		if (_.nextRefresh && _.nextRefresh > Date.now())
 			return;
 		_.setRefresh();
-		if (_.refreshes < CT.stream.opts.resetLimit) 
+		if (rl == "auto")
+			rl = Math.ceil(CT.pubsub.presence(chan).length / 2);
+		if (_.refreshes < rl)
 			stream.core.reset();
 		else {
 			CT.storage.set(sk, CT.merge({
