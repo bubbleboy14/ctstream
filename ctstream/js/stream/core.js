@@ -401,7 +401,7 @@ stream.core = {
 	credz: function(cb) {
 		if (core.config.ctstream.require_user) {
 			CT.require("user.core", true);
-			var current_user = user.core.get();
+			var current_user = CT.module("user.core").get();
 			if (!current_user ||
 				(core.config.ctstream.require_admin && !current_user.admin))
 					stream.core.redir();
