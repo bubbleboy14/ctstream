@@ -8,7 +8,7 @@ stream.core = {
 		recorder: null,
 		multiplexer: null,
 		host: location.hostname,
-		testMode: "bounce", // stream|bounce
+		testMode: "ask", // stream|bounce|ask
 		mode: "camera",
 		modes: {
 			camera: "getUserMedia",
@@ -274,13 +274,24 @@ stream.core = {
 //		stream.core._.recorder.start();
 	},
 	startTest: function() {
+		var sc = stream.core, _ = sc._, tmode = _.testMode;
+		if (tmode != "ask")
+			return sc._startTest(tmode);
+		CT.modal.choice({
+			data: ["bounce", "stream"],
+			cb: sc._startTest
+		});
+	},
+	_startTest: function(tmode) {
 		var _ = stream.core._;
-		if (_.testMode == "bounce") {
-			var streamer = new CT.stream.Streamer();
+		if (tmode == "bounce") {
+			var streamer = new CT.stream.Streamer({
+				vopts: { mimeType: CT.stream.opts.modes[_.mode] }
+			});
 			CT.dom.setContent(_.nodes.test, streamer.getNode());
 			stream.core.startRecord(streamer.echo);
 		} else { // stream
-			navigator.mediaDevices.getUserMedia({ video: true }).then(function(strm) {
+			navigator.mediaDevices[_.modes[_.mode]]({ video: true }).then(function(strm) {
 				_.stream = strm;
 				CT.dom.setContent(_.nodes.test, CT.dom.video(strm,
 					null, null, { autoplay: true }));
