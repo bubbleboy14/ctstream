@@ -97,6 +97,16 @@ stream.core = {
 				})
 			});
 		},
+		screensel: function() {
+			var _ = stream.core._;
+			CT.modal.choice({
+				prompt: "what do you want to share?",
+				data: ["monitor", "window", "browser"],
+				cb: function(sharesel) {
+					_.displaySurface = sharesel;
+				}
+			});
+		},
 		pass: function() {
 			return btoa(Date.now());
 		},
@@ -229,17 +239,17 @@ stream.core = {
 	startRecord: function(cb, vid) {
 		var sc = stream.core, _ = sc._;
 		_.cb = cb;
-		if (CT.info.isFirefox && _.mode == "screenshare" && !_.ffasked) {
-			_.ffasked = true; // TODO : fully fix Firefox Screenshare
+/*		if (CT.info.isFirefox && _.mode == "screenshare" && !_.ffasked) {
+			_.ffasked = true; // TODO : fully fix Firefox Screenshare (this doesn't work)
 			return CT.stream.opts.doPrompt("Ready to record?", "Begin Broadcast",
 				() => sc.startRecord(cb, vid)).show();
-		}
+		}*/
 		CT.stream.util.record(cb, function(rec, vstream) {
 			_.recorder = rec;
 			_.stream = vstream;
 			if (vid)
 				vid.video.srcObject = vstream;
-		}, null, _.modes[_.mode], _.deviceId);
+		}, null, _.modes[_.mode], _.deviceId, _.displaySurface);
 	},
 	reset: function() {
 		var _ = stream.core._;
@@ -408,7 +418,7 @@ stream.core = {
 					data: ["camera", "screenshare"],
 					cb: function(mode) {
 						_.mode = mode;
-						(mode == "camera") && _.camsel();
+						(mode == "camera") ? _.camsel() : _.screensel();
 					}
 				});
 			}
