@@ -468,6 +468,10 @@ stream.core = {
 				channel = channel.slice(0, -5);
 				opts.lurk = true;
 			}
+			if (channel.slice(-7) == "_screen") {
+				channel = channel.slice(0, -7);
+				stream.core._.mode = "screenshare";
+			}
 			opts.channel = channel;
 			stream.core.startMultiplex(opts);
 		} else
