@@ -9,11 +9,6 @@ stream.core = {
 		multiplexer: null,
 		host: location.hostname,
 		testMode: "ask", // stream|bounce|ask
-		mode: "camera",
-		modes: {
-			camera: "getUserMedia",
-			screenshare: "getDisplayMedia"
-		},
 		nodes: {
 			parent: null,
 			test: CT.dom.div(null, null, "testnode"),
@@ -239,17 +234,17 @@ stream.core = {
 	startRecord: function(cb, vid) {
 		var sc = stream.core, _ = sc._;
 		_.cb = cb;
-/*		if (CT.info.isFirefox && _.mode == "screenshare" && !_.ffasked) {
+		if (CT.info.isFirefox && CT.stream.opts.mode == "screenshare" && !_.ffasked) {
 			_.ffasked = true; // TODO : fully fix Firefox Screenshare (this doesn't work)
 			return CT.stream.opts.doPrompt("Ready to record?", "Begin Broadcast",
 				() => sc.startRecord(cb, vid)).show();
-		}*/
+		}
 		CT.stream.util.record(cb, function(rec, vstream) {
 			_.recorder = rec;
 			_.stream = vstream;
 			if (vid)
 				vid.video.srcObject = vstream;
-		}, null, _.modes[_.mode], _.deviceId, _.displaySurface);
+		}, null, null, _.deviceId, _.displaySurface);
 	},
 	reset: function() {
 		var _ = stream.core._;
@@ -295,13 +290,11 @@ stream.core = {
 	_startTest: function(tmode) {
 		var _ = stream.core._;
 		if (tmode == "bounce") {
-			var streamer = new CT.stream.Streamer({
-				vopts: { mimeType: CT.stream.opts.modes[_.mode] }
-			});
+			var streamer = new CT.stream.Streamer();
 			CT.dom.setContent(_.nodes.test, streamer.getNode());
 			stream.core.startRecord(streamer.echo);
 		} else { // stream
-			navigator.mediaDevices[_.modes[_.mode]]({ video: true }).then(function(strm) {
+			CT.stream.opts.getter({ video: true }).then(function(strm) {
 				_.stream = strm;
 				CT.dom.setContent(_.nodes.test, CT.dom.video(strm,
 					null, null, { autoplay: true }));
@@ -322,7 +315,7 @@ stream.core = {
 					stream.core.startRecord(stream.core.multiplex(channel, cnode));
 				});
 			}
-			CT.pubsub.meta(channel, { mode: stream.core._.mode });
+			CT.pubsub.meta(channel, { mode: CT.stream.opts.mode });
 		}
 	},
 	startMultiplex: function(channel, chat, lurk, zoom, user, inferred, bypass) {
@@ -408,16 +401,16 @@ stream.core = {
 		});
 	},
 	loadModeSwapper: function() {
-		var _ = stream.core._;
+		var _ = stream.core._, stropts = CT.stream.opts;
 		core.config.footer.links.unshift({
 			content: "swap mode",
 			className: "glowing",
 			cb: function() {
 				CT.modal.choice({
-					prompt: "current: " + _.mode,
+					prompt: "current: " + stropts.mode,
 					data: ["camera", "screenshare"],
 					cb: function(mode) {
-						_.mode = mode;
+						stropts.setMode(mode);
 						(mode == "camera") ? _.camsel() : _.screensel();
 					}
 				});
@@ -496,7 +489,7 @@ stream.core = {
 			}
 			if (channel.slice(-7) == "_screen") {
 				channel = channel.slice(0, -7);
-				stream.core._.mode = "screenshare";
+				CT.stream.opts.setMode("screenshare");
 			}
 			opts.channel = channel;
 			stream.core.startMultiplex(opts);
