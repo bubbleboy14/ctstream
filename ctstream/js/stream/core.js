@@ -235,9 +235,10 @@ stream.core = {
 		var sc = stream.core, _ = sc._;
 		_.cb = cb;
 		if (CT.info.isFirefox && CT.stream.opts.mode == "screenshare" && !_.ffasked) {
-			_.ffasked = true; // TODO : fully fix Firefox Screenshare (this doesn't work)
-			return CT.stream.opts.doPrompt("Ready to record?", "Begin Broadcast",
-				() => sc.startRecord(cb, vid)).show();
+			_.ffasked = true;
+			_.dp = _.dp || CT.stream.opts.doPrompt("Ready to record?",
+				"Begin Broadcast", () => sc.startRecord(cb, vid));
+			return _.dp.show();
 		}
 		_.ffasked = false;
 		CT.stream.util.record(cb, function(rec, vstream) {
@@ -274,6 +275,7 @@ stream.core = {
 			CT.log("stopping and starting recorder!");
 			stream.core.stopRecord();
 			stream.core.startRecord(_.cb, _.recorder.video);
+			_.refreshes = 0;
 		} else {
 			CT.storage.set(sk, CT.merge({
 				bypass: stream.core._.pass() 
