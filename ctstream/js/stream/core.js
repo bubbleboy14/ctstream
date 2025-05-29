@@ -231,7 +231,7 @@ stream.core = {
 			CT.dom.remove(v);
 		}
 	},
-	startRecord: function(cb, vid) {
+	startRecord: function(cb, vid, onready) {
 		var sc = stream.core, _ = sc._;
 		_.cb = cb;
 		if (CT.info.isFirefox && CT.stream.opts.mode == "screenshare" && !_.ffasked) {
@@ -246,18 +246,28 @@ stream.core = {
 			_.stream = vstream;
 			if (vid)
 				vid.video.srcObject = vstream;
+			onready && onready();
 		}, null, null, _.deviceId, _.displaySurface);
 	},
-	reset: function() {
+	stopStart: function(cb) {
+		CT.log("stopStart()!");
+		var _ = stream.core._;
+		stream.core.stopRecord();
+		stream.core.startRecord(_.cb, _.recorder.video, cb);
+	},
+	subMeta: function() {
+		var _ = stream.core._;
+		CT.pubsub.subscribe(_.channel);
+		CT.pubsub.meta(_.channel, { mode: CT.stream.opts.mode });
+	},
+	reset: function(force) {
 		var _ = stream.core._;
 		CT.log("STREAM CORE RESET");
 		CT.pubsub.unsubscribe(_.channel);
-		if (CT.stream.opts.mode == "camera") {
-			stream.core.stopRecord();
-			stream.core.startRecord(_.cb, _.recorder.video);
-		}
-		CT.pubsub.subscribe(_.channel);
-		CT.pubsub.meta(_.channel, { mode: CT.stream.opts.mode });
+		if (force || (CT.stream.opts.mode == "camera"))
+			stream.core.stopStart(stream.core.subMeta);
+		else
+			stream.core.subMeta();
 	},
 	refresh: function(chan) {
 		var _ = stream.core._, rl = CT.stream.opts.resetLimit,
@@ -272,9 +282,7 @@ stream.core = {
 		if (_.refreshes < rl)
 			stream.core.reset();
 		else if (CT.stream.opts.mode == "screenshare") {
-			CT.log("stopping and starting recorder!");
-			stream.core.stopRecord();
-			stream.core.startRecord(_.cb, _.recorder.video);
+			stream.core.reset(true);
 			_.refreshes = 0;
 		} else {
 			CT.storage.set(sk, CT.merge({
