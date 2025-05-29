@@ -239,6 +239,7 @@ stream.core = {
 			return CT.stream.opts.doPrompt("Ready to record?", "Begin Broadcast",
 				() => sc.startRecord(cb, vid)).show();
 		}
+		_.ffasked = false;
 		CT.stream.util.record(cb, function(rec, vstream) {
 			_.recorder = rec;
 			_.stream = vstream;
