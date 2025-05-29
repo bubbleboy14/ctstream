@@ -251,9 +251,12 @@ stream.core = {
 		var _ = stream.core._;
 		CT.log("STREAM CORE RESET");
 		CT.pubsub.unsubscribe(_.channel);
-		stream.core.stopRecord();
-		stream.core.startRecord(_.cb, _.recorder.video);
+		if (CT.stream.opts.mode == "camera") {
+			stream.core.stopRecord();
+			stream.core.startRecord(_.cb, _.recorder.video);
+		}
 		CT.pubsub.subscribe(_.channel);
+		CT.pubsub.meta(_.channel, { mode: CT.stream.opts.mode });
 	},
 	refresh: function(chan) {
 		var _ = stream.core._, rl = CT.stream.opts.resetLimit,
@@ -267,7 +270,11 @@ stream.core = {
 			rl = Math.ceil(CT.pubsub.presence(chan).length / 2);
 		if (_.refreshes < rl)
 			stream.core.reset();
-		else {
+		else if (CT.stream.opts.mode == "screenshare") {
+			CT.log("stopping and starting recorder!");
+			stream.core.stopRecord();
+			stream.core.startRecord(_.cb, _.recorder.video);
+		} else {
 			CT.storage.set(sk, CT.merge({
 				bypass: stream.core._.pass() 
 			}, CT.storage.get(sk)));
