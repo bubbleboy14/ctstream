@@ -172,6 +172,14 @@ stream.core = {
 			_.refreshed = n;
 		}
 	},
+	handleSub: function() {
+		var now = Date.now(), sc = stream.core, _ = sc._;
+		CT.log("NEW SUB!!!!");
+		if (!_.subreset || _.subreset + CT.stream.opts.reset < now) {
+			_.subreset = now;
+			sc.reset();
+		}
+	},
 	multiplex: function(channel, chat, lurk, noco, onbuff) {
 		var c = core.config.ctstream, _ = stream.core._, opts = CT.merge({
 			chat: chat,
@@ -181,8 +189,10 @@ stream.core = {
 			node: _.nodes.video,
 			title: _.nodes.title
 		}, c.multiplexer_opts), isAdmin = !lurk || c.admins.indexOf(opts.user) != -1;
-		if (c.recover)
+		if (c.recover) {
+			opts.onsub = stream.core.handleSub;
 			opts.onerror = stream.core.handleReset;
+		}
 		if (c.back_message) {
 			opts.onstart = function() {
 				CT.dom.hide(_.nodes.back);
@@ -263,6 +273,7 @@ stream.core = {
 	reset: function(force) {
 		var _ = stream.core._;
 		CT.log("STREAM CORE RESET");
+		_.multiplexer.initChunk = false;
 		CT.pubsub.unsubscribe(_.channel);
 		if (force || (CT.stream.opts.mode == "camera"))
 			stream.core.stopStart(stream.core.subMeta);
